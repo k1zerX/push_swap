@@ -6,25 +6,24 @@
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/19 20:49:31 by kbatz             #+#    #+#              #
-#    Updated: 2018/11/20 15:50:39 by kbatz            ###   ########.fr        #
+#    Updated: 2018/11/27 12:55:07 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = ft_display_file
+NAME = run.exe
 SRCSDIR = srcs/
 SRCS = $(patsubst $(SRCSDIR)%, %, $(wildcard $(SRCSDIR)*.c))
 HDRSDIR = includes/
 HDRS = $(wildcard $(HDRSDIR)*.h)
-OBJSDIR = objs/
+OBJSDIR = .objs/
 OBJS = $(SRCS:.c=.o)
-ADDFLAGS = -I $(HDRSDIR)
 FLAGS = -Wall -Wextra -Werror
 TESTSDIR = tests/
 TESTS = $(patsubst $(TESTSDIR)%, %, $(wildcard $(TESTSDIR)*.test))
 
 vpath %.c $(SRCSDIR)
 vpath %.o $(OBJSDIR)
-vpath %.test $(TESTSDIR)
+vpath %.t $(TESTSDIR)
 
 all: $(NAME)
 
@@ -32,11 +31,10 @@ $(NAME): $(OBJSDIR) $(OBJS) $(HDRS)
 	echo $(TESTS)
 	gcc $(addprefix $(OBJSDIR), $(OBJS)) -o $(NAME)
 
-%.o: %.c
-	gcc $(FLAGS) $(ADDFLAGS) -c $< -o $(OBJSDIR)$@
+$(OBJS): %.o: %.c
+	gcc $(FLAGS) -I $(HDRSDIR) -c $< -o $(OBJSDIR)$@
 
 clean:
-	rm -Rf $(addprefix $(OBJSDIR), $(OBJS))
 	rm -Rf $(OBJSDIR)
 
 fclean: clean
@@ -48,13 +46,14 @@ $(OBJSDIR):
 	mkdir $(OBJSDIR)
 
 norm:
-	norminette $(HDDRSDIR) $(SRCSDIR)
+	norminette $(HDRSDIR) $(SRCSDIR)
 
-ft_test: $(TESTS)
-	echo $(TESTS)
+t: $(TESTS)
 
-$(TESTS):
-	echo "||| ------- test start ------- |||"
-	./$(NAME) $(TESTDIR)$(TESTS)
-	echo "||| -------- test end -------- |||"
+$(TESTS): %.t:
+	@echo ""
+	@echo "||| >>>>>>> test start >>>>>>> |||"
+	./$(NAME) $@
+	@echo ""
+	@echo "||| <<<<<<<< test end <<<<<<<< |||"
 
