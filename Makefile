@@ -5,55 +5,65 @@
 #                                                     +:+ +:+         +:+      #
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/11/19 20:49:31 by kbatz             #+#    #+#              #
-#    Updated: 2018/11/27 12:55:07 by kbatz            ###   ########.fr        #
+#    Created: 2018/12/02 04:16:06 by kbatz             #+#    #+#              #
+#    Updated: 2018/12/22 18:23:48 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = run.exe
-SRCSDIR = srcs/
-SRCS = $(patsubst $(SRCSDIR)%, %, $(wildcard $(SRCSDIR)*.c))
-HDRSDIR = includes/
-HDRS = $(wildcard $(HDRSDIR)*.h)
-OBJSDIR = .objs/
-OBJS = $(SRCS:.c=.o)
-FLAGS = -Wall -Wextra -Werror
-TESTSDIR = tests/
-TESTS = $(patsubst $(TESTSDIR)%, %, $(wildcard $(TESTSDIR)*.test))
+PRJNAME	= project
+NAME	= $(PRJNAME)
+LIB		= libft
+SRCDIR	= ./src/
+OBJDIR	= ./.obj/
+HDRDIR	= ./include/
+TESTDIR	= ./test/
+LIBDIR	= ./$(LIB)/
+SRC		= $(patsubst $(SRCDIR)%, %, $(wildcard $(SRCDIR)*.c))
+OBJ		= $(SRC:%.c=%.o)
+HDR		= $(wildcard $(HDRDIR)*.h)
+TEST	= $(patsubst $(TESTDIR), %, $(wildcard $(TESTDIR)*))
+LFLAG	= -I$(LIBDIR) -L$(LIBDIR) -$(subst lib, l, $(LIB)) # double -I
+IFLAG	= -I$(HDRDIR)
+CFLAG	= -Wall -Wextra -Werror
+FLAGS	= $(CFLAG) $(IFLAG)
 
-vpath %.c $(SRCSDIR)
-vpath %.o $(OBJSDIR)
-vpath %.t $(TESTSDIR)
+vpath %.c $(SRCDIR)
+vpath %.o $(OBJDIR)
 
 all: $(NAME)
 
-$(NAME): $(OBJSDIR) $(OBJS) $(HDRS)
-	echo $(TESTS)
-	gcc $(addprefix $(OBJSDIR), $(OBJS)) -o $(NAME)
+$(NAME): $(LIB)all $(OBJDIR) $(OBJ)
+	echo $(SRC)
+	gcc $(addprefix $(OBJDIR), $(OBJ)) -o $(NAME)
 
-$(OBJS): %.o: %.c
-	gcc $(FLAGS) -I $(HDRSDIR) -c $< -o $(OBJSDIR)$@
+$(OBJ): %.o: %.c $(HDR)
+	gcc $(FLAGS) -c $< -o $(OBJDIR)$@
 
-clean:
-	rm -Rf $(OBJSDIR)
+$(OBJDIR):
+	mkdir $(OBJDIR)
+
+clean: $(LIB)fclean
+	rm -Rf $(OBJDIR)
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -Rf $(NAME)
 
 re: fclean all
 
-$(OBJSDIR):
-	mkdir $(OBJSDIR)
+$(LIB)%:
+	make -C $(LIBDIR) $(patsubst $(LIB)%, %, $@)
 
 norm:
-	norminette $(HDRSDIR) $(SRCSDIR)
+	norminette $(addprefix $(SRCDIR), $(SRC))
+	norminette $(addprefix $(HDRDIR), $(HDR))
 
-t: $(TESTS)
+t: all $(TEST)
 
-$(TESTS): %.t:
+$(TEST): %:
+	@echo "--------------------------------------------------"
+	@echo "| >>>>> TEST \""$@"\" START >>>>> |"
 	@echo ""
-	@echo "||| >>>>>>> test start >>>>>>> |||"
-	./$(NAME) $@
+	@./$(NAME) $(TESTDIR)$@
 	@echo ""
-	@echo "||| <<<<<<<< test end <<<<<<<< |||"
-
+	@echo "| <<<<< TEST \""$@"\" END <<<<< |"
+	@echo "--------------------------------------------------"
