@@ -1,4 +1,4 @@
-# **************************************************************************** #
+
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
@@ -6,26 +6,27 @@
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/02 04:16:06 by kbatz             #+#    #+#              #
-#    Updated: 2018/12/23 18:27:27 by kbatz            ###   ########.fr        #
+#    Updated: 2018/12/23 20:57:19 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 PRJNAME	= project
 NAME	= $(PRJNAME)
 LIB		= libft
-SRCDIR	= ./src/
-OBJDIR	= ./.obj/
-HDRDIR	= ./include/
-TESTDIR	= ./test/
-LIBDIR	= ./$(LIB)/
+SRCDIR	= src/
+OBJDIR	= .obj/
+HDRDIR	= include/
+TESTDIR	= test/
+LIBDIR	= $(LIB)/
+LHD		= $(LIBDIR)/include/
 SRC		= $(patsubst $(SRCDIR)%, %, $(wildcard $(SRCDIR)*.c))
 OBJ		= $(SRC:%.c=%.o)
 HDR		= $(wildcard $(HDRDIR)*.h)
 TEST	= $(patsubst $(TESTDIR), %, $(wildcard $(TESTDIR)*))
-LFLAG	= -I$(LIBDIR) -L$(LIBDIR) -$(subst lib, l, $(LIB)) # double -I
+LFLAG	= -I$(LHD) -L$(LIBDIR) -$(subst lib, l, $(LIB))
 IFLAG	= -I$(HDRDIR)
 CFLAG	= -Wall -Wextra -Werror
-FLAGS	= $(CFLAG) $(IFLAG)
+ALLFLAG	= $(CFLAG) $(IFLAG) $(LFLAG)
 
 vpath %.c $(SRCDIR)
 vpath %.o $(OBJDIR)
@@ -36,7 +37,7 @@ $(NAME): $(LIB)all $(OBJDIR) $(OBJ)
 	gcc $(addprefix $(OBJDIR), $(OBJ)) -o $(NAME)
 
 $(OBJ): %.o: %.c $(HDR)
-	gcc $(FLAGS) -c $< -o $(OBJDIR)$@
+	gcc $(ALLFLAG) -c $< -o $(OBJDIR)$@
 
 $(OBJDIR):
 	mkdir $(OBJDIR)
