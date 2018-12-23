@@ -6,7 +6,7 @@
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/02 04:16:06 by kbatz             #+#    #+#              #
-#    Updated: 2018/12/22 18:23:48 by kbatz            ###   ########.fr        #
+#    Updated: 2018/12/23 18:27:27 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,6 @@ vpath %.o $(OBJDIR)
 all: $(NAME)
 
 $(NAME): $(LIB)all $(OBJDIR) $(OBJ)
-	echo $(SRC)
 	gcc $(addprefix $(OBJDIR), $(OBJ)) -o $(NAME)
 
 $(OBJ): %.o: %.c $(HDR)
