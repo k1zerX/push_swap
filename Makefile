@@ -1,34 +1,44 @@
-
+# **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/12/02 04:16:06 by kbatz             #+#    #+#              #
-#    Updated: 2018/12/25 19:05:29 by kbatz            ###   ########.fr        #
+#    Created: 2018/12/25 21:10:51 by kbatz             #+#    #+#              #
+#    Updated: 2018/12/25 21:11:20 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 PRJNAME	= project
-NAME	= $(PRJNAME)
 LIB		= libft
-SRCDIR	= srcs/
-OBJDIR	= .objs/
-HDRDIR	= includes/
+
+# **************************************************************************** #
+
+SRCDIR	= src/
+OBJDIR	= .obj/
+HDRDIR	= include/
 TESTDIR	= test/
-LIBDIR	= $(LIB)/
-LHD		= $(LIBDIR)/includes/
+
+# **************************************************************************** #
+
+NAME	= $(PRJNAME)
+LIBDIR	= $(addsuffix /,$(LIB))
+LHD		= $(addsuffix $(HDRDIR),$(LIBDIR))
 SRC		= $(patsubst $(SRCDIR)%,%,$(wildcard $(SRCDIR)*.c))
 OBJ		= $(SRC:%.c=%.o)
 HDR		= $(wildcard $(HDRDIR)*.h)
 TEST	= $(patsubst $(TESTDIR),%,$(wildcard $(TESTDIR)*))
-LFLAG	= -I$(LHD) -L$(LIBDIR) -$(patsubst lib%,l%,$(LIB))
-IFLAG	= -I$(HDRDIR) -I$(LHD)
+LFLAG	= $(addprefix -I,$(LHD)) $(addprefix -L,$(LIBDIR)) $(addprefix -,$(patsubst lib%,l%,$(LIB)))
+IFLAG	= $(addprefix -I,$(HDRDIR)) $(addprefix -I,$(LHD))
 CFLAG	= -Wall -Wextra -Werror
+
+# **************************************************************************** #
 
 vpath %.c $(SRCDIR)
 vpath %.o $(OBJDIR)
+
+# **************************************************************************** #
 
 all: $(NAME)
 
