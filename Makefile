@@ -6,27 +6,26 @@
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/02 04:16:06 by kbatz             #+#    #+#              #
-#    Updated: 2018/12/24 18:40:02 by kbatz            ###   ########.fr        #
+#    Updated: 2018/12/25 19:05:29 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 PRJNAME	= project
 NAME	= $(PRJNAME)
 LIB		= libft
-SRCDIR	= src/
-OBJDIR	= .obj/
-HDRDIR	= include/
+SRCDIR	= srcs/
+OBJDIR	= .objs/
+HDRDIR	= includes/
 TESTDIR	= test/
 LIBDIR	= $(LIB)/
-LHD		= $(LIBDIR)/include/
-SRC		= $(patsubst $(SRCDIR)%, %, $(wildcard $(SRCDIR)*.c))
+LHD		= $(LIBDIR)/includes/
+SRC		= $(patsubst $(SRCDIR)%,%,$(wildcard $(SRCDIR)*.c))
 OBJ		= $(SRC:%.c=%.o)
 HDR		= $(wildcard $(HDRDIR)*.h)
-TEST	= $(patsubst $(TESTDIR), %, $(wildcard $(TESTDIR)*))
-LFLAG	= -I$(LHD) -L$(LIBDIR) -$(subst lib, l, $(LIB))
-IFLAG	= -I$(HDRDIR)
+TEST	= $(patsubst $(TESTDIR),%,$(wildcard $(TESTDIR)*))
+LFLAG	= -I$(LHD) -L$(LIBDIR) -$(patsubst lib%,l%,$(LIB))
+IFLAG	= -I$(HDRDIR) -I$(LHD)
 CFLAG	= -Wall -Wextra -Werror
-ALLFLAG	= $(CFLAG) $(IFLAG) $(LFLAG)
 
 vpath %.c $(SRCDIR)
 vpath %.o $(OBJDIR)
@@ -34,10 +33,10 @@ vpath %.o $(OBJDIR)
 all: $(NAME)
 
 $(NAME): $(LIB)all $(OBJDIR) $(OBJ)
-	gcc $(addprefix $(OBJDIR), $(OBJ)) -o $(NAME)
+	gcc $(addprefix $(OBJDIR), $(OBJ)) -o $(NAME) $(IFLAG) $(LFLAG)
 
 $(OBJ): %.o: %.c $(HDR)
-	gcc $(ALLFLAG) -c $< -o $(OBJDIR)$@
+	gcc $(CFLAG) $(IFLAG) -c $< -o $(OBJDIR)$@
 
 $(OBJDIR):
 	mkdir $(OBJDIR)
