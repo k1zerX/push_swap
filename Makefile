@@ -6,12 +6,12 @@
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/25 21:10:51 by kbatz             #+#    #+#              #
-#    Updated: 2018/12/25 21:11:20 by kbatz            ###   ########.fr        #
+#    Updated: 2019/01/06 08:33:41 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 PRJNAME	= project
-LIB		= libft
+LIB		= libft libmlx
 
 # **************************************************************************** #
 
@@ -25,11 +25,12 @@ TESTDIR	= test/
 NAME	= $(PRJNAME)
 LIBDIR	= $(addsuffix /,$(LIB))
 LHD		= $(addsuffix $(HDRDIR),$(LIBDIR))
+#LHD		= $(LIBDIR)
 SRC		= $(patsubst $(SRCDIR)%,%,$(wildcard $(SRCDIR)*.c))
 OBJ		= $(SRC:%.c=%.o)
 HDR		= $(wildcard $(HDRDIR)*.h)
 TEST	= $(patsubst $(TESTDIR),%,$(wildcard $(TESTDIR)*))
-LFLAG	= $(addprefix -I,$(LHD)) $(addprefix -L,$(LIBDIR)) $(addprefix -,$(patsubst lib%,l%,$(LIB)))
+LFLAG	= $(addprefix -L,$(LIBDIR)) $(addprefix -,$(patsubst lib%,l%,$(LIB)))
 IFLAG	= $(addprefix -I,$(HDRDIR)) $(addprefix -I,$(LHD))
 CFLAG	= -Wall -Wextra -Werror
 
@@ -40,9 +41,9 @@ vpath %.o $(OBJDIR)
 
 # **************************************************************************** #
 
-all: $(NAME)
+all: $(NAME) $(addsuffix all,$(LIB))
 
-$(NAME): $(LIB)all $(OBJDIR) $(OBJ)
+$(NAME): $(OBJDIR) $(OBJ)
 	gcc $(addprefix $(OBJDIR), $(OBJ)) -o $(NAME) $(IFLAG) $(LFLAG)
 
 $(OBJ): %.o: %.c $(HDR)
@@ -59,8 +60,10 @@ fclean: clean
 
 re: fclean all
 
-$(LIB)%:
-	make -C $(LIBDIR) $(patsubst $(LIB)%, %, $@)
+$(LIB)%: lib%: $@
+
+lib%:
+	make -C $@/ $(patsubst $(LIB)%, %, $@)
 
 norm:
 	norminette $(addprefix $(SRCDIR), $(SRC))
