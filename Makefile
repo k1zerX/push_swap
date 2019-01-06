@@ -6,12 +6,12 @@
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/25 21:10:51 by kbatz             #+#    #+#              #
-#    Updated: 2019/01/06 08:33:41 by kbatz            ###   ########.fr        #
+#    Updated: 2019/01/06 09:53:24 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 PRJNAME	= project
-LIB		= libft libmlx
+LIB		= libft
 
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ vpath %.o $(OBJDIR)
 
 # **************************************************************************** #
 
-all: $(NAME) $(addsuffix all,$(LIB))
+all: $(addsuffix .all,$(LIB)) $(NAME)
 
 $(NAME): $(OBJDIR) $(OBJ)
 	gcc $(addprefix $(OBJDIR), $(OBJ)) -o $(NAME) $(IFLAG) $(LFLAG)
@@ -60,10 +60,8 @@ fclean: clean
 
 re: fclean all
 
-$(LIB)%: lib%: $@
-
 lib%:
-	make -C $@/ $(patsubst $(LIB)%, %, $@)
+	make -C $(subst .,/ ,$@)
 
 norm:
 	norminette $(addprefix $(SRCDIR), $(SRC))
