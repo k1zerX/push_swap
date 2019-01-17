@@ -6,11 +6,11 @@
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/25 21:10:51 by kbatz             #+#    #+#              #
-#    Updated: 2019/01/06 09:53:24 by kbatz            ###   ########.fr        #
+#    Updated: 2019/01/08 18:55:43 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-PRJNAME	= project
+NAME	= project
 LIB		= libft
 
 # **************************************************************************** #
@@ -22,7 +22,6 @@ TESTDIR	= test/
 
 # **************************************************************************** #
 
-NAME	= $(PRJNAME)
 LIBDIR	= $(addsuffix /,$(LIB))
 LHD		= $(addsuffix $(HDRDIR),$(LIBDIR))
 #LHD		= $(LIBDIR)
@@ -52,7 +51,7 @@ $(OBJ): %.o: %.c $(HDR)
 $(OBJDIR):
 	mkdir $(OBJDIR)
 
-clean: $(LIB)fclean
+clean: $(addsuffix .fclean,$(LIB))
 	rm -Rf $(OBJDIR)
 
 fclean: clean
