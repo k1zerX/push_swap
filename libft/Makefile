@@ -6,19 +6,14 @@
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 17:33:15 by kbatz             #+#    #+#              #
-#    Updated: 2018/12/20 14:02:26 by kbatz            ###   ########.fr        #
+#    Updated: 2019/01/17 17:43:58 by krakharo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
-define colorecho
-	@tput setaf 6
-	@echo "| "$(subst .a,,$(NAME))" >>>"$1
-	@tput sgr0
-endef
 
 PRJNAME = libft
 NAME = $(PRJNAME).a
 HDR = $(PRJNAME).h
+HDRDIR = ./
 SRCS =	ft_atoi.c ft_btree_bfs.c ft_btree_infix.c ft_btree_insert.c			\
 		ft_btree_new.c ft_btree_prefix.c ft_btree_suffix.c ft_bzero.c		\
 		ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c	\
@@ -34,8 +29,9 @@ SRCS =	ft_atoi.c ft_btree_bfs.c ft_btree_infix.c ft_btree_insert.c			\
 		ft_strlcat.c ft_strlen.c ft_strmap.c ft_strmapi.c ft_strncat.c		\
 		ft_strncmp.c ft_strncpy.c ft_strnequ.c ft_strnew.c ft_strnstr.c		\
 		ft_strrchr.c ft_strsplit.c ft_strstr.c ft_strsub.c ft_strtrim.c		\
-		ft_tolower.c ft_toupper.c ft_btree_search.c ft_min.c ft_max.c
-OBJS = $(SRCS:.c=.o)
+		ft_tolower.c ft_toupper.c ft_min.c ft_max.c get_next_line.c			\
+		ft_itoa_base.c ft_new_elem.c
+OBJS = $(SRCS:%.c=%.o)
 OBJSDIR = .objs/
 FLAGS = -Wall -Wextra -Werror
 
@@ -44,25 +40,21 @@ vpath %.o $(OBJSDIR)
 all: $(NAME)
 
 $(NAME): $(OBJSDIR) $(OBJS)
-	@ar rc $(NAME) $(addprefix $(OBJSDIR), $(OBJS))
-	@$(call colorecho, $(PRJNAME)" is ready!")
+	ar rc $(NAME) $(addprefix $(OBJSDIR), $(OBJS))
 
-$(OBJS): %.o:  %.c $(HDR)
-	@gcc $(FLAGS) -c $< -o $(OBJSDIR)$@
+$(OBJS): %.o: %.c $(addprefix $(HDRDIR),$(HDR))
+	gcc $(FLAGS) -c -I$(HDRDIR) $< -o $(OBJSDIR)$@
 
 clean:
-	@rm -Rf $(OBJSDIR)
-	@$(call colorecho, "Objects has been removed")
+	rm -Rf $(OBJSDIR)
 
 fclean: clean
-	@rm -Rf $(NAME)
-	@$(call colorecho, $(PRJNAME)" has been removed")
+	rm -Rf $(NAME)
 
 re: fclean all
 
 $(OBJSDIR):
-	@mkdir $(OBJSDIR)
-	@$(call colorecho, "Making objects...")
+	mkdir $(OBJSDIR)
 
 norm:
-	@norminette *.c *.h
+	norminette *.c *.h
