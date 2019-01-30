@@ -6,12 +6,12 @@
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/25 21:10:51 by kbatz             #+#    #+#              #
-#    Updated: 2019/01/17 20:15:31 by kbatz            ###   ########.fr        #
+#    Updated: 2019/01/30 21:35:03 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= project
-LIB		= libft
+LIB		= #libft
 
 # **************************************************************************** #
 
@@ -65,6 +65,13 @@ lib%:
 norm:
 	norminette $(addprefix $(SRCDIR), $(SRC))
 	norminette $(addprefix $(HDRDIR), $(HDR))
+
+g: $(OBJDIR) $(OBJ)
+	gcc -g $(addprefix $(SRCDIR), $(SRC)) -o debug_$(NAME) $(IFLAG) $(LFLAG)
+
+gclean:
+	rm -Rf debug_$(NAME)
+	rm -Rf debug_$(NAME).dSYM
 
 t: all $(TEST)
 
