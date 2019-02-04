@@ -6,7 +6,7 @@
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/25 21:10:51 by kbatz             #+#    #+#              #
-#    Updated: 2019/01/30 21:35:03 by kbatz            ###   ########.fr        #
+#    Updated: 2019/02/04 20:05:51 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,6 @@ TESTDIR	= test/
 
 LIBDIR	= $(addsuffix /,$(LIB))
 LHD		= $(addsuffix $(HDRDIR),$(LIBDIR))
-#LHD		= $(LIBDIR)
 SRC		= $(patsubst $(SRCDIR)%,%,$(wildcard $(SRCDIR)*.c))
 OBJ		= $(SRC:%.c=%.o)
 HDR		= $(wildcard $(HDRDIR)*.h)
@@ -40,7 +39,7 @@ vpath %.o $(OBJDIR)
 
 # **************************************************************************** #
 
-all: $(addsuffix .all,$(LIB)) $(NAME)
+all: lib.all $(NAME)
 
 $(NAME): $(OBJDIR) $(OBJ)
 	gcc $(addprefix $(OBJDIR), $(OBJ)) -o $(NAME) $(IFLAG) $(LFLAG)
@@ -51,7 +50,7 @@ $(OBJ): %.o: %.c $(HDR)
 $(OBJDIR):
 	mkdir $(OBJDIR)
 
-clean: $(addsuffix .fclean,$(LIB))
+clean: lib.fclean
 	rm -Rf $(OBJDIR)
 
 fclean: clean
@@ -60,7 +59,9 @@ fclean: clean
 re: fclean all
 
 lib%:
-	make -C $(subst .,/ ,$@)
+	$(foreach C, $(LIBDIR), \
+		make -C $(C) $(patsubst lib.%,%,$@) \
+	)
 
 norm:
 	norminette $(addprefix $(SRCDIR), $(SRC))
