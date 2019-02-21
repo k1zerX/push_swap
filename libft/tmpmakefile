@@ -1,0 +1,64 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2018/11/20 17:33:15 by kbatz             #+#    #+#              #
+#    Updated: 2019/02/05 03:23:03 by kbatz            ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+NAME	=	libft.a
+
+# **************************************************************************** #
+
+HDRDIR	=	include/
+OBJDIR	=	.obj/
+SRCDIR	=	src/
+FLAG	=	-Wall -Wextra -Werror
+
+# **************************************************************************** #
+
+SRCS	=	$(wildcard $(SRCDIR)*)
+OBJS	=	$(OBJDIR) $(addsuffix /,$(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCS)))
+HDR 	=	$(wildcard $(HDRDIR)*)
+SRC		=
+
+$(foreach S,$(SRCS), \
+	$(eval SRC += $(patsubst $(SRCDIR)%,%,$(wildcard $(S)/*))) \
+)
+
+OBJ		=	$(SRC:%.c=%.o)
+OBJT	=	$(filter %.o,$(subst /, ,$@))
+
+# **************************************************************************** #
+
+vpath %.c $(SRCDIR)
+vpath %.o $(OBJDIR)
+
+# **************************************************************************** #
+
+all: $(NAME)
+	echo $(OBJT)
+
+$(NAME): $(OBJDIR) $(OBJ)
+	ar rc $(NAME) $(addprefix $(OBJDIR),$(filter %.o,$(subst /, ,$@)))
+
+$(OBJ): %.o: %.c $(HDR)
+	gcc $(FLAG) -I$(HDRDIR) -o $(OBJDIR)$(filter %.o,$(subst /, ,$@)) -c $<
+
+clean:
+	rm -Rf $(OBJDIR)
+
+fclean: clean
+	rm -Rf $(NAME)
+
+re: fclean all
+
+$(OBJDIR):
+	mkdir $(OBJDIR)
+
+norm:
+	norminette *.c *.h
