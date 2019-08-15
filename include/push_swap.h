@@ -1,20 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/27 12:55:31 by kbatz             #+#    #+#             */
-/*   Updated: 2018/12/22 18:17:30 by kbatz            ###   ########.fr       */
+/*   Created: 2019/02/21 07:29:36 by kbatz             #+#    #+#             */
+/*   Updated: 2019/02/21 13:08:07 by kbatz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#ifndef PUSH_SWAP_H
+# define PUSH_SWAP_H
 
-int		main(int ac, char **av)
+# include "libft.h"
+# include "cmds.h"
+# include "tools.h"
+
+# define ERROR 0
+
+typedef struct		s_cmd
 {
-	(void)ac;
-	(void)av;
-	return (0);
-}
+	char			*cmd;
+	int				(*f)(t_stack *a, t_stack *b);
+	int				(*rf)(t_stack *a, t_stack *b);
+}					t_cmd;
+
+#endif

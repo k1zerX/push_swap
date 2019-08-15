@@ -6,11 +6,12 @@
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/25 21:10:51 by kbatz             #+#    #+#              #
-#    Updated: 2019/02/21 07:18:34 by kbatz            ###   ########.fr        #
+#    Updated: 2019/08/15 23:20:03 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	= push_swap
+NAME1	= push_swap
+NAME2	= checker
 LIB		= libft
 
 # **************************************************************************** #
@@ -39,10 +40,13 @@ vpath %.o $(OBJDIR)
 
 # **************************************************************************** #
 
-all: lib.all $(NAME)
+all: lib.all $(NAME1) $(NAME2)
 
-$(NAME): $(OBJDIR) $(OBJ)
-	gcc $(addprefix $(OBJDIR), $(OBJ)) -o $(NAME) $(IFLAG) $(LFLAG)
+$(NAME1): $(OBJDIR) $(filter-out $(NAME2).o,$(OBJ))
+	gcc $(addprefix $(OBJDIR), $(filter-out $(NAME2).o,$(OBJ))) -o $(NAME1) $(IFLAG) $(LFLAG)
+
+$(NAME2): $(OBJDIR) $(filter-out $(NAME1).o,$(OBJ))
+	gcc $(addprefix $(OBJDIR), $(filter-out $(NAME1).o,$(OBJ))) -o $(NAME2) $(IFLAG) $(LFLAG)
 
 $(OBJ): %.o: %.c $(HDR)
 	gcc $(CFLAG) $(IFLAG) -c $< -o $(OBJDIR)$@
@@ -54,7 +58,8 @@ clean: lib.fclean
 	rm -Rf $(OBJDIR)
 
 fclean: clean
-	rm -Rf $(NAME)
+	rm -Rf $(NAME1)
+	rm -Rf checker
 
 re: fclean all
 
@@ -68,11 +73,11 @@ norm:
 	norminette $(addprefix $(HDRDIR), $(HDR))
 
 g: $(OBJDIR) $(OBJ)
-	gcc -g $(addprefix $(SRCDIR), $(SRC)) -o debug_$(NAME) $(IFLAG) $(LFLAG)
+	gcc -g $(addprefix $(SRCDIR), $(SRC)) -o debug_$(NAME1) $(IFLAG) $(LFLAG)
 
 gclean:
-	rm -Rf debug_$(NAME)
-	rm -Rf debug_$(NAME).dSYM
+	rm -Rf debug_$(NAME1)
+	rm -Rf debug_$(NAME1).dSYM
 
 t: all $(TEST)
 
@@ -80,7 +85,7 @@ $(TEST): %:
 	@echo "--------------------------------------------------"
 	@echo "| >>>>> TEST \""$@"\" START >>>>> |"
 	@echo ""
-	@./$(NAME) $(TESTDIR)$@
+	@./$(NAME1) $(TESTDIR)$@
 	@echo ""
 	@echo "| <<<<< TEST \""$@"\" END <<<<< |"
 	@echo "--------------------------------------------------"
