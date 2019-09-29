@@ -6,7 +6,7 @@
 /*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 07:37:52 by kbatz             #+#    #+#             */
-/*   Updated: 2019/02/21 13:06:37 by kbatz            ###   ########.fr       */
+/*   Updated: 2019/09/06 20:57:37 by kbatz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,13 @@ int		ra(t_stack *a, t_stack *b)
 	t_elem	*buf;
 
 	(void)b;
-	buf = ft_stack_pop(a);
-	tmp = a->start;
-	if (!tmp)
+	if (!(buf = ft_stack_pop(a)))
 		return (0);
+	if (!(tmp = a->start))
+	{
+		ft_stack_push(a, buf);
+		return (0);
+	}
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = buf;
@@ -35,10 +38,13 @@ int		rb(t_stack *a, t_stack *b)
 	t_elem	*buf;
 
 	(void)a;
-	buf = ft_stack_pop(b);
-	tmp = b->start;
-	if (!tmp)
+	if (!(buf = ft_stack_pop(b)))
 		return (0);
+	if (!(tmp = b->start))
+	{
+		ft_stack_push(b, buf);
+		return (0);
+	}
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = buf;
