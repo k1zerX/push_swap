@@ -6,7 +6,7 @@
 /*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 07:30:21 by kbatz             #+#    #+#             */
-/*   Updated: 2019/02/21 12:58:42 by kbatz            ###   ########.fr       */
+/*   Updated: 2019/10/13 20:30:02 by kbatz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ typedef enum	e_cmds	t_cmds;
 struct					s_cmd
 {
 	const char			*name;
-	char				(*check)(t_ps_stack *a, t_ps_stack *b);
+	char				(*check)(t_ps_stack *a, t_ps_stack *b); // sdelat ne pointer !!!
 	void				(*func)(t_ps_stack *a, t_ps_stack *b);
 	void				(*cancel)(t_ps_stack *a, t_ps_stack *b);
 };

@@ -1,12 +1,37 @@
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-typedef struct	s_nbr	t_nbr;
+# include "cmds.h"
 
-struct					s_nbr
+typedef struct	s_nbr		t_nbr;
+typedef struct	s_state		t_state;
+typedef struct	s_sol		t_sol;
+typedef struct	s_sol_elem	t_sol_elem;
+
+struct						s_nbr
 {
-	int					n;
-	unsigned int		pos;
+	unsigned				n;
+	unsigned int			pos;
+};
+
+struct						s_sol_elem
+{
+	t_cmds					cmd;
+	int						amount;
+	t_sol_elem				*next;
+};
+
+struct						s_sol
+{
+	t_sol_elem				*top;
+	int						len;
+};
+
+struct						s_state
+{
+	t_ps_stack				a;
+	t_ps_stack				b;
+	t_sol					sol;
 };
 
 #endif

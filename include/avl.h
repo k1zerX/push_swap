@@ -6,7 +6,7 @@
 /*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/15 20:40:40 by kbatz             #+#    #+#             */
-/*   Updated: 2019/10/07 00:10:54 by kbatz            ###   ########.fr       */
+/*   Updated: 2019/10/13 21:32:19 by kbatz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define AVL_H
 
 # include <stdlib.h>
-# include <queue.h>
+# include <ps_queue.h>
 
 typedef struct	s_node		t_node;
 
@@ -27,7 +27,7 @@ typedef struct	s_node		t_node;
 struct						s_node
 {
 	T_AVL_KEY				AVL_KEY;
-	t_queue					q;
+	t_ps_queue				q;
 	t_node					*left;
 	t_node					*right;
 	unsigned char			height;

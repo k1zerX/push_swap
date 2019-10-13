@@ -9,7 +9,7 @@ char	check_sb(t_ps_stack *a, t_ps_stack *b)
 	(void)a;
 	if (!(tmp1 = b->top))
 		return (0);
-	if (!(tmp2 = tmp1->next))
+	if (!(tmp2 = tmp1->next) || !(tmp2->next))
 		return (0);
 	if ((tmp1->end - tmp1->start > 0) || (tmp2->end - tmp2->start > 0))
 		return (0);

@@ -4,7 +4,7 @@
 char	check_rrb(t_ps_stack *a, t_ps_stack *b)
 {
 	(void)a;
-	if (b->top && b->top->next && b->top->next->next)
+	if (b->top && b->top->next)
 		return (1);
 	return (0);
 }

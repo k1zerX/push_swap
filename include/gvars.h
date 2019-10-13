@@ -16,7 +16,7 @@ t_cmd	g_cmds[] =
 	[RRA]	= {"rra", &check_rra, &rra, &ra},
 	[RRB]	= {"rrb", &check_rrb, &rrb, &rb},
 	[RRR]	= {"rrr", &check_rrr, &rrr, &rr},
-	[LEN]	= {NULL, NULL, NULL}
+	[LEN]	= {NULL, NULL, NULL, NULL}
 };
 
 char	g_map[LEN][LEN] =

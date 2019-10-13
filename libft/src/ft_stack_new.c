@@ -1,25 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   ft_stack_new.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/21 20:13:47 by kbatz             #+#    #+#             */
-/*   Updated: 2018/12/02 05:56:23 by kbatz            ###   ########.fr       */
+/*   Created: 2018/11/28 15:00:24 by kbatz             #+#    #+#             */
+/*   Updated: 2019/03/04 15:42:29 by kbatz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_strcmp(char *s1, char *s2)
+t_stack		*ft_stack_new(void)
 {
-	while (*s1 || *s2)
-	{
-		if (*s1 != *s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
-	}
-	return (0);
+	t_stack		*stack;
+
+	if (!(stack = ft_memalloc(sizeof(*stack))))
+		return (NULL);
+	return (stack);
 }

@@ -25,4 +25,6 @@ void	pa(t_ps_stack *a, t_ps_stack *b)
 	else
 		a->bot = tmp;
 	a->top = tmp;
+	--b->len;
+	++a->len;
 }

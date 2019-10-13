@@ -60,9 +60,9 @@ char	lists_to_arr(t_ps_list lists[10], t_nbr **arr)
 
 char	radix_sort_digit(t_nbr **arr, int len, t_ps_list lists[10], int digit)
 {
-	int		i;
-	char	flag;
-	int		buf;
+	int				i;
+	char			flag;
+	unsigned int	buf;
 
 	i = 0;
 	flag = 0;

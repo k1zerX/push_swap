@@ -19,26 +19,36 @@ char	ft_isdigit(char c)
 
 t_nbr	*new_nbr(int n)
 {
-	t_nbr	*nbr;
+	t_nbr			*nbr;
 
 	if (!(nbr = malloc(sizeof(t_nbr))))
 		ft_exit();
-	nbr->n = n;
+	nbr->n = (unsigned int)n + ((unsigned int)1 << (sizeof(int) * 8 - 1));
 	return (nbr);
 }
 
 void	fill_list_str(t_ps_list *list, char *str)
 {
 	int		n;
+	char	sign;
 
 	while (*str)
 	{
-		if (ft_isdigit(*str))
+		if (ft_isdigit(*str) || *str == '-' || *str == '+')
 		{
+			if (*str == '+')
+				++str;
+			if (*str == '-')
+			{
+				sign = -1;
+				++str;
+			}
+			else
+				sign = 1;
 			n = 0;
 			while (ft_isdigit(*str))
 			{
-				n = n * 10 + (*str - '0');
+				n = n * 10 + (*str - '0') * sign;
 				++str;
 			}
 			list_add(list, new_nbr(n));
@@ -52,8 +62,6 @@ void	fill_list_str(t_ps_list *list, char *str)
 
 void	fill_list(t_ps_list *list, int ac, char *av[])
 {
-	int		i;
-
 	while (ac > 1)
 	{
 		fill_list_str(list, *++av);
@@ -88,21 +96,22 @@ void	fill_stack(t_ps_stack *stack, t_ps_list list)
 	if (!(buf = malloc(sizeof(t_ps_selem))))
 		ft_exit();
 	buf->prev = NULL;
-	buf->start = tmp->nbr->n;
+	buf->start = tmp->nbr->pos;
 	buf->end = buf->start;
 	stack->top = buf;
 	tmp = tmp->next;
 	while (tmp)
 	{
 		prev = buf;
-		if (!(buf->next = malloc(sizeof(t_ps_selem))))
+		if (!(buf = malloc(sizeof(t_ps_selem))))
 			ft_exit();
 		buf->prev = prev;
-		buf->start = tmp->nbr->n;
+		buf->start = tmp->nbr->pos;
 		buf->end = buf->start;
 		prev->next = buf;
 		tmp = tmp->next;
 	}
 	buf->next = NULL;
 	stack->bot = buf;
+	stack->len = list.len;
 }

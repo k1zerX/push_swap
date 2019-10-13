@@ -1,25 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/21 20:13:47 by kbatz             #+#    #+#             */
-/*   Updated: 2018/12/02 05:56:23 by kbatz            ###   ########.fr       */
+/*   Created: 2018/11/23 23:08:15 by kbatz             #+#    #+#             */
+/*   Updated: 2018/12/22 20:14:49 by kbatz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_strcmp(char *s1, char *s2)
+static void		ft_del(void *content, size_t content_size)
 {
-	while (*s1 || *s2)
+	if (!content)
+		return ;
+	ft_bzero(content, content_size);
+	free(content);
+}
+
+t_list			*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem))
+{
+	t_list	*res;
+
+	if (!lst || !f)
+		return (NULL);
+	res = (*f)(lst);
+	if (res)
 	{
-		if (*s1 != *s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
+		res->next = ft_lstmap(lst->next, f);
+		if (!res->next && lst->next)
+		{
+			ft_lstdelone(&res, &ft_del);
+			return (NULL);
+		}
 	}
-	return (0);
+	return (res);
 }
