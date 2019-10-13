@@ -1,0 +1,28 @@
+#include "cmds.h"
+#include "ps_stack.h"
+
+char	check_pb(t_ps_stack *a, t_ps_stack *b)
+{
+	(void)b;
+	if (!a->top)
+		return (0);
+	return (1);
+}
+
+void	pb(t_ps_stack *a, t_ps_stack *b)
+{
+	t_ps_selem	*tmp;
+
+	tmp = a->top;
+	a->top = tmp->next;
+	if (a->top)
+		a->top->prev = NULL;
+	else
+		a->bot = NULL;
+	tmp->next = b->top;
+	if (b->top)
+		b->top->prev = tmp;
+	else
+		b->bot = tmp;
+	b->top = tmp;
+}

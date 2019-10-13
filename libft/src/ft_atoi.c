@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools.h                                            :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/21 09:38:07 by kbatz             #+#    #+#             */
-/*   Updated: 2019/02/21 10:43:26 by kbatz            ###   ########.fr       */
+/*   Created: 2018/11/20 20:05:39 by kbatz             #+#    #+#             */
+/*   Updated: 2019/09/08 20:13:18 by kbatz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TOOLS_H
-# define TOOLS_H
+#include "libft.h"
 
-# include "ps_stack.h"
-# include "ps_list.h"
-# include <stdlib.h>
-# include <unistd.h>
+int		ft_atoi(const char *str)
+{
+	long	res;
+	char	sign;
 
-# define ERROR 0
-
-void	ft_exit(void);
-void	fill_list(t_ps_list *list, int ac, char *av[]);
-t_nbr	**get_arr(t_ps_list list);
-void	fill_stack(t_ps_stack *stack, t_ps_list list);
-//char	is_sorted(t_ps_stack *a);
-
-#endif
+	res = 0;
+	sign = 0;
+	while ((*str >= 9 && *str <= 13) || *str == 32)
+		++str;
+	if (*str == '-' || *str == '+')
+		sign = *str++ == '-';
+	while (*str >= '0' && *str <= '9')
+		res = res * 10 + (*str++ - '0');
+	return ((int)(sign ? -res : res));
+}

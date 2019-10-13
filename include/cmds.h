@@ -13,18 +13,59 @@
 #ifndef CMDS_H
 # define CMDS_H
 
-# include "push_swap.h"
+#include "ps_stack.h"
 
-int		sa(t_stack *a, t_stack *b);
-int		sb(t_stack *a, t_stack *b);
-int		ss(t_stack *a, t_stack *b);
-int		pa(t_stack *a, t_stack *b);
-int		pb(t_stack *a, t_stack *b);
-int		ra(t_stack *a, t_stack *b);
-int		rb(t_stack *a, t_stack *b);
-int		rr(t_stack *a, t_stack *b);
-int		rra(t_stack *a, t_stack *b);
-int		rrb(t_stack *a, t_stack *b);
-int		rrr(t_stack *a, t_stack *b);
+typedef struct	s_cmd	t_cmd;
+typedef enum	e_cmds	t_cmds;
+
+struct					s_cmd
+{
+	const char			*name;
+	char				(*check)(t_ps_stack *a, t_ps_stack *b);
+	void				(*func)(t_ps_stack *a, t_ps_stack *b);
+	void				(*cancel)(t_ps_stack *a, t_ps_stack *b);
+};
+
+enum					e_cmds
+{
+	SA,
+	SB,
+	SS,
+	PA,
+	PB,
+	RA,
+	RB,
+	RR,
+	RRA,
+	RRB,
+	RRR,
+	LEN
+};
+
+extern t_cmd			g_cmds[];
+extern char				g_map[LEN][LEN];
+
+char					check_sa(t_ps_stack *a, t_ps_stack *b);
+char					check_sb(t_ps_stack *a, t_ps_stack *b);
+char					check_ss(t_ps_stack *a, t_ps_stack *b);
+char					check_pa(t_ps_stack *a, t_ps_stack *b);
+char					check_pb(t_ps_stack *a, t_ps_stack *b);
+char					check_ra(t_ps_stack *a, t_ps_stack *b);
+char					check_rb(t_ps_stack *a, t_ps_stack *b);
+char					check_rr(t_ps_stack *a, t_ps_stack *b);
+char					check_rra(t_ps_stack *a, t_ps_stack *b);
+char					check_rrb(t_ps_stack *a, t_ps_stack *b);
+char					check_rrr(t_ps_stack *a, t_ps_stack *b);
+void					sa(t_ps_stack *a, t_ps_stack *b);
+void					sb(t_ps_stack *a, t_ps_stack *b);
+void					ss(t_ps_stack *a, t_ps_stack *b);
+void					pa(t_ps_stack *a, t_ps_stack *b);
+void					pb(t_ps_stack *a, t_ps_stack *b);
+void					ra(t_ps_stack *a, t_ps_stack *b);
+void					rb(t_ps_stack *a, t_ps_stack *b);
+void					rr(t_ps_stack *a, t_ps_stack *b);
+void					rra(t_ps_stack *a, t_ps_stack *b);
+void					rrb(t_ps_stack *a, t_ps_stack *b);
+void					rrr(t_ps_stack *a, t_ps_stack *b);
 
 #endif

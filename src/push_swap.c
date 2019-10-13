@@ -1,119 +1,53 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/21 07:47:51 by kbatz             #+#    #+#             */
-/*   Updated: 2019/02/21 14:04:42 by kbatz            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "tools.h"
+#include "ps_stack.h"
+#include "cmds.h"
+#include "gvars.h"
+#include "radix_sort.h"
 
-#include "push_swap.h"
 
-t_cmd	g_cmds[] =
+#include <stdio.h>
+void	print_list(t_ps_list list)
 {
-	{"sa", &sa, &sa},
-	{"sb", &sb, &sb},
-	{"ss", &ss, &ss},
-	{"pa", &pa, &pb},
-	{"pb", &pb, &pa},
-	{"ra", &ra, &rra},
-	{"rb", &rb, &rrb},
-	{"rr", &rr, &rrr},
-	{"rra", &rra, &ra},
-	{"rrb", &rrb, &rb},
-	{"rrr", &rrr, &rr},
-	{NULL, NULL, NULL}
-};
-/**/
-#include <stdio.h> // убрать
-void	print_stack(t_stack *s)
-{
-	t_elem		*tmp;
+	t_ps_lelem	*tmp;
 
-	tmp = s->start;
+	tmp = list.start;
+	printf("|-----------------------|\n");
+	printf("| len %d \t\t|\n", list.len);
 	while (tmp)
 	{
-		printf("%d\n", *(int *)tmp->content);
+		printf("|\t%u\t%d\t|\n", tmp->nbr->pos + 1, tmp->nbr->n);
 		tmp = tmp->next;
 	}
+	printf("|-----------------------|\n");
 }
-/**/
-void	ft_print(t_stack *a, t_stack *b)
-{
-	printf("----------------\n");
-	printf("a:\n");
-	print_stack(a);
-	printf("\n");
-	printf("b:\n");
-	print_stack(b);
-	printf("\n");
-	printf("----------------\n");
-}
-/**/
-char	push_swap(t_stack *a, t_stack *b, t_stack *sol, int len)
+
+void	print_arr(t_nbr **arr, int len)
 {
 	int		i;
-	char	bln;
 
-	(void)a;
-	(void)b;
-	(void)sol;
-
-//	ft_print(a, b);
-	if (is_sorted(a) && !b->len)
-		return (1);
-	i = -1;
-	while (g_cmds[++i].cmd)
+	i = 0;
+	while (i < len - 1)
 	{
-		--len;
-//		printf("%s\n", g_cmds[i].cmd);
-		bln = g_cmds[i].f(a, b);
-//		ft_print(a, b);
-		ft_stack_push(sol, ft_new_elem(g_cmds[i].cmd, 0, 0));
-		if (len)
-			push_swap(a, b, sol, len);
-		if (is_sorted(a) && !b->len)
-			return (1);
-		if (bln)
-			g_cmds[i].rf(a, b);
-//		ft_print(a, b);
-		++len;
-		free(ft_stack_pop(sol));
+		printf("%d, ", arr[i]->n);
+		++i;
 	}
-	return (0);
+	printf("%d\n", arr[i]->n);
 }
 
-void	print_sol(t_stack *sol)
+int		main(int ac, char *av[])
 {
-	t_elem	*tmp;
+	t_ps_stack	a;
+	t_ps_stack	b;
+	t_ps_list	list;
+	t_nbr		**arr;
 
-	tmp = ft_stack_pop(sol);
-	if (sol->len > 0)
-		print_sol(sol);
-	write(1, tmp->content, ft_strlen(tmp->content));
-	write(1, "\n", 1);
-	free(tmp);
-}
-
-int		main(int ac, char **av)
-{
-	t_stack		*a;
-	t_stack		*b;
-	t_stack		*sol;
-	int			len;
-
-	if (ac < 2)
-		return (0);
-	a = ft_stack_new();
-	b = ft_stack_new();
-	sol = ft_stack_new();
-	fill_stack(a, ac, av);
-	len = 1;
-	while (!push_swap(a, b, sol, len))
-		len++;
-	print_sol(sol);
+	a = (t_ps_stack){NULL, NULL};
+	b = (t_ps_stack){NULL, NULL};
+	list = (t_ps_list){NULL, NULL, 0};
+	fill_list(&list, ac, av);
+	arr = get_arr(list);
+	radix_sort(arr, list.len);
+	print_list(list); //
+	fill_stack(&a, list);
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: kbatz <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 17:33:15 by kbatz             #+#    #+#              #
-#    Updated: 2019/02/05 04:12:25 by kbatz            ###   ########.fr        #
+#    Updated: 2019/09/13 22:39:25 by kbatz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,43 +14,42 @@ NAME	= libft.a
 
 # **************************************************************************** #
 
-HDRDIR	=	include/
-SRCDIR	=	src/
-FLAG	=	-Wall -Wextra -Werror
+HDRDIR	= ./
+SRCDIR	= src/
+OBJDIR	= .obj/
 
 # **************************************************************************** #
 
-SRCS	=	$(wildcard $(SRCDIR)*)
-HDR 	=	$(wildcard $(HDRDIR)*.h)
-SRC		=
-
-$(foreach S,$(SRCS), \
-	$(eval SRC += $(wildcard $(S)/*.c)) \
-)
-
-OBJ		=	$(SRC:%.c=%.o)
+SRC		= $(patsubst $(SRCDIR)%,%,$(wildcard $(SRCDIR)*.c))
+HDR 	= $(wildcard $(HDRDIR)*.h)
+OBJ		= $(SRC:%.c=%.o)
+IFLAG	= $(addprefix -I,$(HDRDIR))
+CFLAG	= -Wall -Wextra -Werror
+CC		= gcc
 
 # **************************************************************************** #
 
-#ifeq "$(wildcard ./*.a)" ""
+vpath %.c $(SRCDIR)
+vpath %.o $(OBJDIR)
+
+# **************************************************************************** #
+
 all: $(NAME)
-#else
-#all:
-#endif
 
-$(NAME): $(OBJ)
-	ar rc $(NAME) $(OBJ)
+$(NAME): $(OBJDIR) $(OBJ)
+	ar rc $(NAME) $(addprefix $(OBJDIR),$(OBJ))
+	ranlib $(NAME)
 
 $(OBJ): %.o: %.c $(HDR)
-	gcc $(FLAG) -I$(HDRDIR) -o $@ -c $<
+	$(CC) $(CFLAG) $(IFLAG) -o $(OBJDIR)$@ -c $<
+
+$(OBJDIR):
+	mkdir $(OBJDIR)
 
 clean:
-	rm -f $(OBJ)
+	rm -Rf $(OBJDIR)
 
 fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
-
-norm:
-	norminette $(SRC) $(HDR)

@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools.h                                            :+:      :+:    :+:   */
+/*   avl_insert.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/21 09:38:07 by kbatz             #+#    #+#             */
-/*   Updated: 2019/02/21 10:43:26 by kbatz            ###   ########.fr       */
+/*   Created: 2019/09/11 21:28:01 by kbatz             #+#    #+#             */
+/*   Updated: 2019/09/25 20:50:22 by etuffleb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TOOLS_H
-# define TOOLS_H
+#include "avl.h"
 
-# include "ps_stack.h"
-# include "ps_list.h"
-# include <stdlib.h>
-# include <unistd.h>
-
-# define ERROR 0
-
-void	ft_exit(void);
-void	fill_list(t_ps_list *list, int ac, char *av[]);
-t_nbr	**get_arr(t_ps_list list);
-void	fill_stack(t_ps_stack *stack, t_ps_list list);
-//char	is_sorted(t_ps_stack *a);
-
-#endif
+t_node	*avl_insert(t_node *root, t_node *node, \
+		int (*cmp)(T_AVL_KEY a, T_AVL_KEY b))
+{
+	if (!root)
+		return (node);
+	if ((*cmp)(node->AVL_KEY, root->AVL_KEY) < 0)
+		root->left = avl_insert(root->left, node, cmp);
+	else
+		root->right = avl_insert(root->right, node, cmp);
+	return (avl_balance(root));
+}
