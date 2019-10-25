@@ -16,7 +16,7 @@ char	check_sb(t_ps_stack *a, t_ps_stack *b)
 	return (1);
 }
 
-void	sb(t_ps_stack *a, t_ps_stack *b)
+int		sb(t_ps_stack *a, t_ps_stack *b)
 {
 	t_ps_selem	*tmp1;
 	t_ps_selem	*tmp2;
@@ -32,4 +32,5 @@ void	sb(t_ps_stack *a, t_ps_stack *b)
 	tmp2->next = tmp1;
 	tmp3->prev = tmp1;
 	b->top = tmp2;
+	return (1);
 }

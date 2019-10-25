@@ -11,6 +11,7 @@ struct						s_ps_queue
 {
 	t_ps_qelem				*start;
 	t_ps_qelem				*end;
+	int						priority;
 };
 
 struct						s_ps_qelem

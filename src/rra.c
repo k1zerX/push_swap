@@ -9,7 +9,7 @@ char	check_rra(t_ps_stack *a, t_ps_stack *b)
 	return (0);
 }
 
-void	rra(t_ps_stack *a, t_ps_stack *b)
+int		rra(t_ps_stack *a, t_ps_stack *b)
 {
 	(void)b;
 	a->bot->next = a->top;
@@ -18,4 +18,5 @@ void	rra(t_ps_stack *a, t_ps_stack *b)
 	a->bot = a->bot->prev;
 	a->bot->next = NULL;
 	a->top->prev = NULL;
+	return (a->top->end - a->top->start + 1);
 }

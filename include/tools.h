@@ -23,7 +23,7 @@
 void	ft_exit(void);
 void	fill_list(t_ps_list *list, int ac, char *av[]);
 t_nbr	**get_arr(t_ps_list list);
-void	fill_stack(t_ps_stack *stack, t_ps_list list);
+void	fill_stack(t_ps_stack *stack, t_ps_list list, int *sum, int *len);
 //char	is_sorted(t_ps_stack *a);
 
 #endif

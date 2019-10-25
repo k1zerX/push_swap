@@ -22,8 +22,8 @@ struct					s_cmd
 {
 	const char			*name;
 	char				(*check)(t_ps_stack *a, t_ps_stack *b); // sdelat ne pointer !!!
-	void				(*func)(t_ps_stack *a, t_ps_stack *b);
-	void				(*cancel)(t_ps_stack *a, t_ps_stack *b);
+	int					(*func)(t_ps_stack *a, t_ps_stack *b);
+	int					(*cancel)(t_ps_stack *a, t_ps_stack *b);
 };
 
 enum					e_cmds
@@ -56,16 +56,16 @@ char					check_rr(t_ps_stack *a, t_ps_stack *b);
 char					check_rra(t_ps_stack *a, t_ps_stack *b);
 char					check_rrb(t_ps_stack *a, t_ps_stack *b);
 char					check_rrr(t_ps_stack *a, t_ps_stack *b);
-void					sa(t_ps_stack *a, t_ps_stack *b);
-void					sb(t_ps_stack *a, t_ps_stack *b);
-void					ss(t_ps_stack *a, t_ps_stack *b);
-void					pa(t_ps_stack *a, t_ps_stack *b);
-void					pb(t_ps_stack *a, t_ps_stack *b);
-void					ra(t_ps_stack *a, t_ps_stack *b);
-void					rb(t_ps_stack *a, t_ps_stack *b);
-void					rr(t_ps_stack *a, t_ps_stack *b);
-void					rra(t_ps_stack *a, t_ps_stack *b);
-void					rrb(t_ps_stack *a, t_ps_stack *b);
-void					rrr(t_ps_stack *a, t_ps_stack *b);
+int						sa(t_ps_stack *a, t_ps_stack *b);
+int						sb(t_ps_stack *a, t_ps_stack *b);
+int						ss(t_ps_stack *a, t_ps_stack *b);
+int						pa(t_ps_stack *a, t_ps_stack *b);
+int						pb(t_ps_stack *a, t_ps_stack *b);
+int						ra(t_ps_stack *a, t_ps_stack *b);
+int						rb(t_ps_stack *a, t_ps_stack *b);
+int						rr(t_ps_stack *a, t_ps_stack *b);
+int						rra(t_ps_stack *a, t_ps_stack *b);
+int						rrb(t_ps_stack *a, t_ps_stack *b);
+int						rrr(t_ps_stack *a, t_ps_stack *b);
 
 #endif

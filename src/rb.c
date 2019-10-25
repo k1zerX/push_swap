@@ -9,7 +9,7 @@ char	check_rb(t_ps_stack *a, t_ps_stack *b)
 	return (0);
 }
 
-void	rb(t_ps_stack *a, t_ps_stack *b)
+int		rb(t_ps_stack *a, t_ps_stack *b)
 {
 	(void)a;
 	b->top->prev = b->bot;
@@ -18,4 +18,5 @@ void	rb(t_ps_stack *a, t_ps_stack *b)
 	b->top = b->top->next;
 	b->top->prev = NULL;
 	b->bot->next = NULL;
+	return (b->bot->end - b->bot->start + 1);
 }

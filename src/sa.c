@@ -16,7 +16,7 @@ char	check_sa(t_ps_stack *a, t_ps_stack *b)
 	return (1);
 }
 
-void	sa(t_ps_stack *a, t_ps_stack *b)
+int		sa(t_ps_stack *a, t_ps_stack *b)
 {
 	t_ps_selem	*tmp1;
 	t_ps_selem	*tmp2;
@@ -32,4 +32,5 @@ void	sa(t_ps_stack *a, t_ps_stack *b)
 	tmp2->next = tmp1;
 	tmp3->prev = tmp1;
 	a->top = tmp2;
+	return (1);
 }

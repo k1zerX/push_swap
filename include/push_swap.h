@@ -10,14 +10,13 @@ typedef struct	s_sol_elem	t_sol_elem;
 
 struct						s_nbr
 {
-	unsigned				n;
+	unsigned int			n;
 	unsigned int			pos;
 };
 
 struct						s_sol_elem
 {
 	t_cmds					cmd;
-	int						amount;
 	t_sol_elem				*next;
 };
 

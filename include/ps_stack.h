@@ -17,6 +17,7 @@ struct						s_ps_selem
 {
 	t_ps_selem				*next;
 	t_ps_selem				*prev;
+	unsigned int			n;
 	unsigned int			start;
 	unsigned int			end;
 };

@@ -86,7 +86,7 @@ t_nbr	**get_arr(t_ps_list list)
 	return (arr);
 }
 
-void	fill_stack(t_ps_stack *stack, t_ps_list list)
+void	fill_stack(t_ps_stack *stack, t_ps_list list, int *sum, int *len)
 {
 	t_ps_lelem	*tmp;
 	t_ps_selem	*buf;
@@ -96,8 +96,11 @@ void	fill_stack(t_ps_stack *stack, t_ps_list list)
 	if (!(buf = malloc(sizeof(t_ps_selem))))
 		ft_exit();
 	buf->prev = NULL;
+	buf->n = tmp->nbr->pos;
 	buf->start = tmp->nbr->pos;
 	buf->end = buf->start;
+	*sum += buf->n;
+	++*len;
 	stack->top = buf;
 	tmp = tmp->next;
 	while (tmp)
@@ -106,8 +109,11 @@ void	fill_stack(t_ps_stack *stack, t_ps_list list)
 		if (!(buf = malloc(sizeof(t_ps_selem))))
 			ft_exit();
 		buf->prev = prev;
+		buf->n = tmp->nbr->pos;
 		buf->start = tmp->nbr->pos;
 		buf->end = buf->start;
+		*sum += buf->n;
+		++*len;
 		prev->next = buf;
 		tmp = tmp->next;
 	}

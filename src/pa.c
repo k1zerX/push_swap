@@ -9,7 +9,7 @@ char	check_pa(t_ps_stack *a, t_ps_stack *b)
 	return (1);
 }
 
-void	pa(t_ps_stack *a, t_ps_stack *b)
+int		pa(t_ps_stack *a, t_ps_stack *b)
 {
 	t_ps_selem	*tmp;
 
@@ -27,4 +27,5 @@ void	pa(t_ps_stack *a, t_ps_stack *b)
 	a->top = tmp;
 	--b->len;
 	++a->len;
+	return (a->top->end - a->top->start + 1);
 }
