@@ -10,7 +10,7 @@ struct						s_ps_stack
 {
 	t_ps_selem				*top;
 	t_ps_selem				*bot;
-	int						len;
+	unsigned int			len;
 };
 
 struct						s_ps_selem

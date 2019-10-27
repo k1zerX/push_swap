@@ -17,6 +17,7 @@
 #include "gvars.h"
 #include "radix_sort.h"
 #include "avl.h"
+#include "libft.h"
 
 
 #include <stdio.h>
@@ -422,6 +423,13 @@ void	ps_sol_add(t_sol *sol, t_cmds cmd)
 	++sol->len;
 }
 
+void	do_cmd(t_state *state, t_cmds cmd)
+{
+	(*g_cmds[cmd].func)(&state->a, &state->b);
+	ps_sol_add(&state->sol, cmd);
+//	print_stacks(state->a, state->b);
+}
+
 void	sort_b(t_state *state, int sum, int len);
 void	sort_a(t_state *state, int sum, int len);
 
@@ -445,14 +453,10 @@ void	sort_a(t_state *state, int sum, int len)
 		{
 			sum2 += state->a.top->n;
 			++len2;
-			(*g_cmds[PB].func)(&state->a, &state->b);
-			ps_sol_add(&state->sol, PB);
+			do_cmd(state, PB);
 		}
 		else
-		{
-			(*g_cmds[RA].func)(&state->a, &state->b);
-			ps_sol_add(&state->sol, RA);
-		}
+			do_cmd(state, RA);
 		++i;
 	}
 	len -= len2;
@@ -460,8 +464,7 @@ void	sort_a(t_state *state, int sum, int len)
 	i = 0;
 	while (i < len)
 	{
-		(*g_cmds[RRA].func)(&state->a, &state->b);
-		ps_sol_add(&state->sol, RRA);
+		do_cmd(state, RRA);
 		++i;
 	}
 	sort_a(state, sum, len);
@@ -480,8 +483,7 @@ void	sort_b(t_state *state, int sum, int len)
 		i = 0;
 		while (i < len)
 		{
-			(*g_cmds[PA].func)(&state->a, &state->b);
-			++state->sol.len;
+			do_cmd(state, PA);
 			++i;
 		}
 		return ;
@@ -496,14 +498,10 @@ void	sort_b(t_state *state, int sum, int len)
 		{
 			sum2 += state->b.top->n;
 			++len2;
-			(*g_cmds[PA].func)(&state->a, &state->b);
-			ps_sol_add(&state->sol, PA);
+			do_cmd(state, PA);
 		}
 		else
-		{
-			(*g_cmds[RB].func)(&state->a, &state->b);
-			ps_sol_add(&state->sol, RB);
-		}
+			do_cmd(state, RB);
 		++i;
 	}
 	len -= len2;
@@ -511,27 +509,339 @@ void	sort_b(t_state *state, int sum, int len)
 	i = 0;
 	while (i < len)
 	{
-		(*g_cmds[RRB].func)(&state->a, &state->b);
-		ps_sol_add(&state->sol, RRB);
+		do_cmd(state, RRB);
 		++i;
 	}
 	sort_a(state, sum2, len2);
 	sort_b(state, sum, len);
 }
-/*
-#define NUMBER 3
 
-void	init_sort(t_state *state, int len)
+#define MIN_NUMBER 2
+
+unsigned int	get_add_number(unsigned int len)
 {
-	const int	step = (len - 1) / (NUMBER - 1);
-	
+	unsigned int	i;
 
-	while (state->a.len >= NUMBER)
+	i = 0;
+	while (i * i <= len)
+		++i;
+	--i;
+	return ((i > MIN_NUMBER) ? (i - MIN_NUMBER) : (0));
+}
+
+void	shift_a(t_state *state, unsigned int ra, unsigned int rra)
+{
+	if (ra < rra)
+		while (ra > 0)
+		{
+			do_cmd(state, RA);
+			--ra;
+		}
+	else
+		while (rra > 0)
+		{
+			do_cmd(state, RRA);
+			--rra;
+		}
+}
+
+void	shift_b(t_state *state, unsigned int rb, unsigned int rrb)
+{
+	if (rb < rrb)
+		while (rb > 0)
+		{
+			do_cmd(state, RB);
+			--rb;
+		}
+	else
+		while (rrb > 0)
+		{
+			do_cmd(state, RRB);
+			--rrb;
+		}
+}
+
+typedef struct s_pos	t_pos;
+
+struct					s_pos
+{
+	unsigned int		ra;
+	unsigned int		rra;
+	unsigned int		rb;
+	unsigned int		rrb;
+};
+
+void	count_one(t_state *state, t_pos *i, const unsigned int n)
+{
+	t_ps_selem			*tmp;
+	t_ps_selem			*next;
+	unsigned int		len;
+
+	i->ra = 0;
+	len = 0;
+	tmp = state->a.top;
+	next = tmp->next;
+	while (next)
 	{
-		s
+		++len;
+		if (tmp->n < n && n < next->n)
+			i->ra = len;
+		tmp = next;
+		next = next->next;
+	}
+	next = state->a.top;
+	if (tmp->n > n && n > next->n)
+		i->ra = len;
+	++len;
+	i->rra = len - i->ra;
+//	printf("||| %u + %u = %u |||\n", i->ra, i->rra, state->a.len);
+}
+
+void	find_min(t_pos *i, t_pos *min_pos, unsigned int *min)
+{
+	unsigned int	buf;
+
+	buf = FT_MAX(i->ra, i->rb);
+	if (buf < *min)
+	{
+		*min = buf;
+		*min_pos = *i;
+//		printf("%d, %u\n", 1, *min);
+	}
+	buf = i->rra + i->rb;
+	if (buf < *min)
+	{
+		*min = buf;
+		*min_pos = *i;
+//		printf("%d, %u\n", 2, *min);
+	}
+	buf = i->ra + i->rrb;
+	if (buf < *min)
+	{
+		*min = buf;
+		*min_pos = *i;
+//		printf("%d, %u\n", 3, *min);
+	}
+	buf = FT_MAX(i->rra, i->rrb);
+	if (buf < *min)
+	{
+		*min = buf;
+		*min_pos = *i;
+//		printf("%d, %u\n", 4, *min);
 	}
 }
+
+void	do_cmd_cycle(t_state *state, t_cmds cmd, unsigned int count)
+{
+	while (count > 0)
+	{
+		do_cmd(state, cmd);
+		--count;
+	}
+}
+
+void	shift(t_state *state, t_pos *i, unsigned int min)
+{
+	unsigned int	buf;
+
+	if (FT_MAX(i->ra, i->rb) == min)
+	{
+		do_cmd_cycle(state, RA, i->ra);
+		do_cmd_cycle(state, RB, i->rb);
+	}
+	else if (i->rra + i->rb == min)
+	{
+		do_cmd_cycle(state, RRA, i->rra);
+		do_cmd_cycle(state, RB, i->rb);
+	}
+	else if (i->ra + i->rrb == min)
+	{
+		do_cmd_cycle(state, RA, i->ra);
+		do_cmd_cycle(state, RRB, i->rrb);
+	}
+	else if (FT_MAX(i->rra, i->rrb) == min)
+	{
+		do_cmd_cycle(state, RRA, i->rra);
+		do_cmd_cycle(state, RRB, i->rrb);
+	}
+}
+
+void	solve_one(t_state *state)
+{
+	t_ps_selem			*tmp;
+	t_pos				i;
+	t_pos				min_pos;
+	unsigned int		min;
+
+	min = -1;
+	i.rb = 0;
+	i.rrb = state->b.len;
+	tmp = state->b.top;
+	while (tmp)
+	{
+		count_one(state, &i, tmp->n);
+		find_min(&i, &min_pos, &min);
+		++i.rb;
+		--i.rrb;
+		tmp = tmp->next;
+	}
+	shift(state, &min_pos, min);
+	do_cmd(state, PA);
+/*
+	const unsigned int	n = state->b.top->n;
+	t_ps_selem			*tmp;
+	t_ps_selem			*next;
+	++len;
+	shift_a(state, i, len - i);
 */
+}
+
+void	to_norm(t_state *state)
+{
+	unsigned int	i;
+	unsigned int	len;
+	t_ps_selem		*tmp;
+
+	i = 0;
+	len = 0;
+	tmp = state->a.top;
+	while (tmp->n != 0)
+	{
+		++i;
+		++len;
+		tmp = tmp->next;
+	}
+	while (tmp)
+	{
+		++len;
+		tmp = tmp->next;
+	}
+	shift_a(state, i, len - i);
+}
+
+void	sort(t_state *state, unsigned int len)
+{
+	const unsigned int	max = len - 1;
+	const unsigned int	add_number = get_add_number(len);
+	const unsigned int	number = MIN_NUMBER + add_number;
+	const unsigned int	step = max / (number - 1);
+	unsigned int		i;
+
+	i = number + ((max % (number - 1)) ? (1) : (0));
+	while (state->a.len > i)
+		if (state->a.top->n % step && state->a.top->n != max)
+			do_cmd(state, PB);
+		else
+			do_cmd(state, RA);
+	while (state->a.len > MIN_NUMBER)
+		if (state->a.top->n == 0 || state->a.top->n == max)
+			do_cmd(state, RA);
+		else
+			do_cmd(state, PB);
+//	printf("before: %u, %u\n", len, i);
+	len -= i;
+	while (--i >= MIN_NUMBER)
+		solve_one(state);
+//	printf("after:\n");
+	i = -1;
+	while (++i <  len)
+		solve_one(state);
+	to_norm(state);
+}
+
+void	merge(t_sol *sol)
+{
+	t_sol_elem		*tmp;
+	t_sol_elem		*start;
+	t_sol_elem		*buf;
+	t_sol_elem		*next;
+	t_sol_elem		*prev;
+	unsigned int	cmds[LEN];
+	unsigned int	min;
+
+	cmds[RA] = 0;
+	cmds[RB] = 0;
+	cmds[RRA] = 0;
+	cmds[RRB] = 0;
+	start = NULL;
+	tmp = sol->top;
+	while (tmp)
+	{
+		if (tmp->cmd == RA || tmp->cmd == RB || \
+				tmp->cmd == RRA || tmp->cmd == RRB)
+		{
+			if (start == NULL)
+				start = tmp;
+			++cmds[tmp->cmd];
+		}
+		else if (start != NULL)
+		{
+			min = FT_MIN(cmds[RA], cmds[RB]);
+			cmds[RA] -= min;
+			cmds[RB] -= min;
+			sol->len -= min;
+			while (min > 0)
+			{
+				start->cmd = RR;
+				prev = start;
+				start = start->next;
+				--min;
+			}
+			min = FT_MIN(cmds[RRA], cmds[RRB]);
+			cmds[RRA] -= min;
+			cmds[RRB] -= min;
+			sol->len -= min;
+			while (min > 0)
+			{
+				start->cmd = RRR;
+				prev = start;
+				start = start->next;
+				--min;
+			}
+			while (cmds[RA] > 0)
+			{
+				start->cmd = RA;
+				prev = start;
+				start = start->next;
+				--cmds[RA];
+			}
+			while (cmds[RB] > 0)
+			{
+				start->cmd = RB;
+				prev = start;
+				start = start->next;
+				--cmds[RB];
+			}
+			while (cmds[RRA] > 0)
+			{
+				start->cmd = RRA;
+				prev = start;
+				start = start->next;
+				--cmds[RRA];
+			}
+			while (cmds[RRB] > 0)
+			{
+				start->cmd = RRB;
+				prev = start;
+				start = start->next;
+				--cmds[RRB];
+			}
+			buf = start;
+//		printf("before:\n");
+			while (buf != tmp)
+			{
+				next = buf->next;
+				free(buf);
+				buf = next;
+			}
+//		printf("after:\n");
+			prev->next = tmp;
+			start = NULL;
+		}
+//		printf("gg %p\n", tmp);
+		tmp = tmp->next;
+	}
+}
 
 void	treatment_sol(t_sol *sol)
 {
@@ -576,6 +886,7 @@ void	treatment_sol(t_sol *sol)
 			c = c->next;
 		}
 	}
+	merge(sol);
 }
 
 int		main(int ac, char *av[])
@@ -599,13 +910,14 @@ int		main(int ac, char *av[])
 	fill_stack(&state.a, list, &sum, &len);
 //	treatment(&state);
 //	print_sol(solve(state));
-//	print_stacks(state.a, state.b); //
-	sort_a(&state, sum, len);
-//	init_sort(&state, len);
-//	print_stacks(state.a, state.b); //
+	print_stacks(state.a, state.b); //
+//	sort_a(&state, sum, len);
+	sort(&state, len);
+	print_stacks(state.a, state.b); //
 	print_sol(state.sol);
-//	printf("|||--- %d ---|||\n", state.sol.len);//
+	printf("|||--- %d ---|||\n", state.sol.len);//
 	treatment_sol(&state.sol);
-//	printf("|||--- %d ---|||\n", state.sol.len);//
+	printf("|||--- %d ---|||\n", state.sol.len);//
+//	print_sol(state.sol);
 	return (0);
 }
