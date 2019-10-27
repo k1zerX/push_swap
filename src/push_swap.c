@@ -6,7 +6,7 @@
 /*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/13 16:30:18 by kbatz             #+#    #+#             */
-/*   Updated: 2019/10/14 00:26:36 by kbatz            ###   ########.fr       */
+/*   Updated: 2019/10/27 23:24:31 by kbatz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -377,7 +377,6 @@ char	is_sorted_a(t_state *state, int len)
 	t_ps_selem	*tmp;
 	t_ps_selem	*next;
 
-	return (len <= 1);
 	tmp = state->a.top;
 	i = 1;
 	while (i < len)
@@ -397,7 +396,6 @@ char	is_sorted_b(t_state *state, int len)
 	t_ps_selem	*tmp;
 	t_ps_selem	*next;
 
-	return (len <= 1);
 	tmp = state->b.top;
 	i = 1;
 	while (i < len)
@@ -526,6 +524,7 @@ unsigned int	get_add_number(unsigned int len)
 	while (i * i <= len)
 		++i;
 	--i;
+	return (3);
 	return ((i > MIN_NUMBER) ? (i - MIN_NUMBER) : (0));
 }
 
@@ -606,28 +605,24 @@ void	find_min(t_pos *i, t_pos *min_pos, unsigned int *min)
 	{
 		*min = buf;
 		*min_pos = *i;
-//		printf("%d, %u\n", 1, *min);
-	}
-	buf = i->rra + i->rb;
-	if (buf < *min)
-	{
-		*min = buf;
-		*min_pos = *i;
-//		printf("%d, %u\n", 2, *min);
-	}
-	buf = i->ra + i->rrb;
-	if (buf < *min)
-	{
-		*min = buf;
-		*min_pos = *i;
-//		printf("%d, %u\n", 3, *min);
 	}
 	buf = FT_MAX(i->rra, i->rrb);
 	if (buf < *min)
 	{
 		*min = buf;
 		*min_pos = *i;
-//		printf("%d, %u\n", 4, *min);
+	}
+	buf = i->ra + i->rrb;
+	if (buf < *min)
+	{
+		*min = buf;
+		*min_pos = *i;
+	}
+	buf = i->rra + i->rb;
+	if (buf < *min)
+	{
+		*min = buf;
+		*min_pos = *i;
 	}
 }
 
@@ -649,20 +644,20 @@ void	shift(t_state *state, t_pos *i, unsigned int min)
 		do_cmd_cycle(state, RA, i->ra);
 		do_cmd_cycle(state, RB, i->rb);
 	}
-	else if (i->rra + i->rb == min)
+	else if (FT_MAX(i->rra, i->rrb) == min)
 	{
 		do_cmd_cycle(state, RRA, i->rra);
-		do_cmd_cycle(state, RB, i->rb);
+		do_cmd_cycle(state, RRB, i->rrb);
 	}
 	else if (i->ra + i->rrb == min)
 	{
 		do_cmd_cycle(state, RA, i->ra);
 		do_cmd_cycle(state, RRB, i->rrb);
 	}
-	else if (FT_MAX(i->rra, i->rrb) == min)
+	else if (i->rra + i->rb == min)
 	{
 		do_cmd_cycle(state, RRA, i->rra);
-		do_cmd_cycle(state, RRB, i->rrb);
+		do_cmd_cycle(state, RB, i->rb);
 	}
 }
 
@@ -681,6 +676,8 @@ void	solve_one(t_state *state)
 	{
 		count_one(state, &i, tmp->n);
 		find_min(&i, &min_pos, &min);
+//		printf("%u:\tra = %u, rb = %u, rra = %u, rrb = %u\n", tmp->n, i.ra, i.rb, i.rra, i.rrb);
+//		printf("min\tra = %u, rb = %u, rra = %u, rrb = %u\n", min_pos.ra, min_pos.rb, min_pos.rra, min_pos.rrb);
 		++i.rb;
 		--i.rrb;
 		tmp = tmp->next;
@@ -897,6 +894,7 @@ int		main(int ac, char *av[])
 	int			sum;
 	int			len;
 
+	void *ptr = malloc(1000);
 	sum = 0;
 	len = 0;
 	state = (t_state){(t_ps_stack){NULL, NULL, 0}, \
@@ -910,14 +908,15 @@ int		main(int ac, char *av[])
 	fill_stack(&state.a, list, &sum, &len);
 //	treatment(&state);
 //	print_sol(solve(state));
-	print_stacks(state.a, state.b); //
-//	sort_a(&state, sum, len);
-	sort(&state, len);
-	print_stacks(state.a, state.b); //
-	print_sol(state.sol);
-	printf("|||--- %d ---|||\n", state.sol.len);//
-	treatment_sol(&state.sol);
-	printf("|||--- %d ---|||\n", state.sol.len);//
+//	print_stacks(state.a, state.b); //
+	if (!is_sorted_a(&state, len))
+//		sort_a(&state, sum, len);
+		sort(&state, len);
+//	print_stacks(state.a, state.b); //
 //	print_sol(state.sol);
+//	printf("|||--- %d ---|||\n", state.sol.len);//
+	treatment_sol(&state.sol);
+	print_sol(state.sol);
+//	printf("|||--- %d ---|||\n", state.sol.len);//
 	return (0);
 }
