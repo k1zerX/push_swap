@@ -24,6 +24,8 @@ void	ft_exit(void);
 void	fill_list(t_ps_list *list, int ac, char *av[]);
 t_nbr	**get_arr(t_ps_list list);
 void	fill_stack(t_ps_stack *stack, t_ps_list list, int *sum, int *len);
-//char	is_sorted(t_ps_stack *a);
+char	is_sorted_a(t_state *state);
+char	is_sorted_b(t_state *state);
+void	ps_sol_add(t_sol *sol, t_cmds cmd);
 
 #endif

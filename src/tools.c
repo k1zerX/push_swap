@@ -3,7 +3,7 @@
 
 void	ft_exit(void)
 {
-	write(2, "error\n", 6);
+	write(2, "Error\n", 6);
 	exit(1);
 }
 
@@ -120,4 +120,54 @@ void	fill_stack(t_ps_stack *stack, t_ps_list list, int *sum, int *len)
 	buf->next = NULL;
 	stack->bot = buf;
 	stack->len = list.len;
+}
+
+char	is_sorted_a(t_state *state)
+{
+	t_ps_selem	*tmp;
+	t_ps_selem	*next;
+
+	if ((tmp = state->a.top))
+	{
+		next = tmp->next;
+		while (next)
+		{
+			next = tmp->next;
+			if (tmp->n > next->n)
+				return (0);
+			tmp = next;
+		}
+	}
+	return (1);
+}
+
+char	is_sorted_b(t_state *state)
+{
+	t_ps_selem	*tmp;
+	t_ps_selem	*next;
+
+	if ((tmp = state->b.top))
+	{
+		next = tmp->next;
+		while (next)
+		{
+			next = tmp->next;
+			if (tmp->n < next->n)
+				return (0);
+			tmp = next;
+		}
+	}
+	return (1);
+}
+
+void	ps_sol_add(t_sol *sol, t_cmds cmd)
+{
+	t_sol_elem	*tmp;
+
+	if (!(tmp = malloc(sizeof(t_sol_elem))))
+		ft_exit();
+	tmp->next = sol->top;
+	sol->top = tmp;
+	tmp->cmd = cmd;
+	++sol->len;
 }

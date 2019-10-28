@@ -21,7 +21,8 @@ typedef enum	e_cmds	t_cmds;
 struct					s_cmd
 {
 	const char			*name;
-	char				(*check)(t_ps_stack *a, t_ps_stack *b); // sdelat ne pointer !!!
+	int					len;
+	char				(*check)(t_ps_stack *a, t_ps_stack *b);
 	int					(*func)(t_ps_stack *a, t_ps_stack *b);
 	int					(*cancel)(t_ps_stack *a, t_ps_stack *b);
 };
@@ -42,7 +43,7 @@ enum					e_cmds
 	LEN
 };
 
-extern t_cmd			g_cmds[];
+extern t_cmd			g_cmds[LEN];
 extern char				g_map[LEN][LEN];
 
 char					check_sa(t_ps_stack *a, t_ps_stack *b);

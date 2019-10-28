@@ -3,20 +3,19 @@
 
 #include "cmds.h"
 
-t_cmd	g_cmds[] =
+t_cmd	g_cmds[LEN] =
 {
-	[SA]	= {"sa", &check_sa, &sa, &sa},
-	[SB]	= {"sb", &check_sb, &sb, &sb},
-	[SS]	= {"ss", &check_ss, &ss, &ss},
-	[PA]	= {"pa", &check_pa, &pa, &pb},
-	[PB]	= {"pb", &check_pb, &pb, &pa},
-	[RA]	= {"ra", &check_ra, &ra, &rra},
-	[RB]	= {"rb", &check_rb, &rb, &rrb},
-	[RR]	= {"rr", &check_rr, &rr, &rrr},
-	[RRA]	= {"rra", &check_rra, &rra, &ra},
-	[RRB]	= {"rrb", &check_rrb, &rrb, &rb},
-	[RRR]	= {"rrr", &check_rrr, &rrr, &rr},
-	[LEN]	= {NULL, NULL, NULL, NULL}
+	[SA]	= {"sa\n", 3, &check_sa, &sa, &sa},
+	[SB]	= {"sb\n", 3, &check_sb, &sb, &sb},
+	[SS]	= {"ss\n", 3, &check_ss, &ss, &ss},
+	[PA]	= {"pa\n", 3, &check_pa, &pa, &pb},
+	[PB]	= {"pb\n", 3, &check_pb, &pb, &pa},
+	[RA]	= {"ra\n", 3, &check_ra, &ra, &rra},
+	[RB]	= {"rb\n", 3, &check_rb, &rb, &rrb},
+	[RR]	= {"rr\n", 3, &check_rr, &rr, &rrr},
+	[RRA]	= {"rra\n", 4, &check_rra, &rra, &ra},
+	[RRB]	= {"rrb\n", 4, &check_rrb, &rrb, &rb},
+	[RRR]	= {"rrr\n", 4, &check_rrr, &rrr, &rr}
 };
 
 char	g_map[LEN][LEN] =
