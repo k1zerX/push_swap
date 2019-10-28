@@ -4,7 +4,7 @@
 char	check_rb(t_ps_stack *a, t_ps_stack *b)
 {
 	(void)a;
-	if (b->top && b->top->next && b->top->next->next)
+	if (b->top && b->top->next)
 		return (1);
 	return (0);
 }
@@ -18,5 +18,5 @@ int		rb(t_ps_stack *a, t_ps_stack *b)
 	b->top = b->top->next;
 	b->top->prev = NULL;
 	b->bot->next = NULL;
-	return (b->bot->end - b->bot->start + 1);
+	return (1);
 }

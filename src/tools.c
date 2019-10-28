@@ -97,8 +97,6 @@ void	fill_stack(t_ps_stack *stack, t_ps_list list, int *sum, int *len)
 		ft_exit();
 	buf->prev = NULL;
 	buf->n = tmp->nbr->pos;
-	buf->start = tmp->nbr->pos;
-	buf->end = buf->start;
 	*sum += buf->n;
 	++*len;
 	stack->top = buf;
@@ -110,8 +108,6 @@ void	fill_stack(t_ps_stack *stack, t_ps_list list, int *sum, int *len)
 			ft_exit();
 		buf->prev = prev;
 		buf->n = tmp->nbr->pos;
-		buf->start = tmp->nbr->pos;
-		buf->end = buf->start;
 		*sum += buf->n;
 		++*len;
 		prev->next = buf;
@@ -132,10 +128,10 @@ char	is_sorted_a(t_state *state)
 		next = tmp->next;
 		while (next)
 		{
-			next = tmp->next;
 			if (tmp->n > next->n)
 				return (0);
 			tmp = next;
+			next = tmp->next;
 		}
 	}
 	return (1);
@@ -151,10 +147,10 @@ char	is_sorted_b(t_state *state)
 		next = tmp->next;
 		while (next)
 		{
-			next = tmp->next;
 			if (tmp->n < next->n)
 				return (0);
 			tmp = next;
+			next = tmp->next;
 		}
 	}
 	return (1);
@@ -166,8 +162,49 @@ void	ps_sol_add(t_sol *sol, t_cmds cmd)
 
 	if (!(tmp = malloc(sizeof(t_sol_elem))))
 		ft_exit();
-	tmp->next = sol->top;
-	sol->top = tmp;
 	tmp->cmd = cmd;
+	tmp->next = NULL;
+	if (sol->bot)
+		sol->bot->next = tmp;
+	else
+		sol->top = tmp;
+	sol->bot = tmp;
 	++sol->len;
+}
+
+void	ft_del_list(t_ps_list list)
+{
+	t_ps_lelem	*tmp;
+	t_ps_lelem	*next;
+
+	tmp = list.start;
+	while (tmp)
+	{
+		next = tmp->next;
+		free(tmp->nbr);
+		free(tmp);
+		tmp = next;
+	}
+}
+
+void	ft_del_stack(t_ps_stack stack)
+{
+	t_ps_selem	*tmp;
+	t_ps_selem	*next;
+
+	tmp = stack.top;
+	while (tmp)
+	{
+		next = tmp->next;
+		free(tmp);
+		tmp = next;
+	}
+}
+
+void	ft_del(t_state state, t_ps_list list, t_nbr **arr)
+{
+	free(arr);
+	ft_del_list(list);
+	ft_del_stack(state.a);
+	ft_del_stack(state.b);
 }

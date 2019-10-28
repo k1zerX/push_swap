@@ -4,7 +4,6 @@
 # include "cmds.h"
 
 # define MIN_NUMBER 2
-# define ADD_NUMBER 1
 
 typedef struct s_nbr		t_nbr;
 typedef struct s_state		t_state;

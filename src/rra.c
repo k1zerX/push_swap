@@ -18,5 +18,5 @@ int		rra(t_ps_stack *a, t_ps_stack *b)
 	a->bot = a->bot->prev;
 	a->bot->next = NULL;
 	a->top->prev = NULL;
-	return (a->top->end - a->top->start + 1);
+	return (1);
 }

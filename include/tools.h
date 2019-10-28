@@ -27,5 +27,6 @@ void	fill_stack(t_ps_stack *stack, t_ps_list list, int *sum, int *len);
 char	is_sorted_a(t_state *state);
 char	is_sorted_b(t_state *state);
 void	ps_sol_add(t_sol *sol, t_cmds cmd);
+void	ft_del(t_state state, t_ps_list list, t_nbr **arr);
 
 #endif

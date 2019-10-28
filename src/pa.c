@@ -27,5 +27,5 @@ int		pa(t_ps_stack *a, t_ps_stack *b)
 	a->top = tmp;
 	--b->len;
 	++a->len;
-	return (a->top->end - a->top->start + 1);
+	return (1);
 }

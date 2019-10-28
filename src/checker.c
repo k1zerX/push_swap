@@ -8,18 +8,34 @@ void	read_sol(t_sol *sol)
 {
 	char	*str;
 	t_cmds	cmd;
+	int		buf;
 
-	if (gnl(0, &str) <= 0)
-		return ;
-	read_sol(sol);
-	cmd = 0;
-	while (cmd < LEN)
+	while ((buf = gnl(0, &str)) > 0)
 	{
-		if (ft_strnequ(str, g_cmds[cmd].name, g_cmds[cmd].len - 1))
-			ps_sol_add(sol, cmd);
-		++cmd;
+		cmd = 0;
+		while (cmd < LEN)
+		{
+			if (ft_strnequ(str, g_cmds[cmd].name, ft_strlen(str)))
+				ps_sol_add(sol, cmd);
+			++cmd;
+		}
+		free(str);
 	}
-	free(str);
+}
+
+char	do_sol(t_state *state)
+{
+	t_sol_elem	*tmp;
+
+	tmp = state->sol.top;
+	while (tmp)
+	{
+		if (!(*g_cmds[tmp->cmd].check)(&state->a, &state->b))
+			return (0);
+		(*g_cmds[tmp->cmd].func)(&state->a, &state->b);
+		tmp = tmp->next;
+	}
+	return (1);
 }
 
 int		main(int ac, char *av[])
@@ -31,16 +47,22 @@ int		main(int ac, char *av[])
 	int			len;
 
 	state = (t_state){(t_ps_stack){NULL, NULL, 0}, \
-			(t_ps_stack){NULL, NULL, 0}, (t_sol){NULL, 0}};
+			(t_ps_stack){NULL, NULL, 0}, (t_sol){NULL, NULL, 0}};
 	list = (t_ps_list){NULL, NULL, 0};
 	fill_list(&list, ac, av);
+	if (!list.start)
+	{
+		write(1, "OK\n", 3);
+		return (0);
+	}
 	arr = get_arr(list);
 	radix_sort(arr, list.len);
 	fill_stack(&state.a, list, &sum, &len);
 	read_sol(&state.sol);
-	if (is_sorted_a(&state) && state.b.top == NULL)
+	if (do_sol(&state) && is_sorted_a(&state) && state.b.top == NULL)
 		write(1, "OK\n", 3);
 	else
 		write(1, "KO\n", 3);
+	ft_del(state, list, arr);
 	return (0);
 }

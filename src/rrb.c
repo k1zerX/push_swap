@@ -18,5 +18,5 @@ int		rrb(t_ps_stack *a, t_ps_stack *b)
 	b->bot = b->bot->prev;
 	b->bot->next = NULL;
 	b->top->prev = NULL;
-	return (b->top->end - b->top->start + 1);
+	return (1);
 }

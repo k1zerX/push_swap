@@ -27,5 +27,5 @@ int		pb(t_ps_stack *a, t_ps_stack *b)
 	b->top = tmp;
 	--a->len;
 	++b->len;
-	return (b->top->end - b->top->start + 1);
+	return (1);
 }

@@ -176,10 +176,40 @@ void	to_norm(t_state *state)
 	shift_a(state, i, len - i);
 }
 
-void	sort(t_state *state, unsigned int len)
+void	sort_three(t_state *state)
 {
-	const unsigned int	max = len - 1;
-	const unsigned int	number = MIN_NUMBER + ADD_NUMBER;
+	if (state->b.top->next->n < state->b.top->next->next->n && \
+			state->b.top->next->n < state->b.top->n)
+		do_cmd(state, RRB);
+	else if (state->b.top->n < state->b.top->next->n && \
+			state->b.top->n < state->b.top->next->next->n)
+		do_cmd(state, RB);
+	if (state->b.top->next->next->n < state->b.top->n && \
+			state->b.top->n < state->b.top->next->n)
+		do_cmd(state, SB);
+	solve_one(state);
+	solve_one(state);
+	solve_one(state);
+}
+
+void	opti_sort(t_state *state)
+{
+	if (state->b.len == 3)
+		sort_three(state);
+	else
+		while (state->b.len > 0)
+			solve_one(state);
+}
+
+unsigned int	get_add_number(unsigned int len)
+{
+	return ((len > 10) ? (1) : (0));
+}
+
+void	sort(t_state *state)
+{
+	const unsigned int	max = state->a.len - 1;
+	const unsigned int	number = MIN_NUMBER + get_add_number(state->a.len);
 	const unsigned int	step = max / (number - 1);
 	unsigned int		i;
 
@@ -194,13 +224,15 @@ void	sort(t_state *state, unsigned int len)
 			do_cmd(state, RA);
 		else
 			do_cmd(state, PB);
-	len -= i;
 	while (--i >= MIN_NUMBER)
 		solve_one(state);
-	i = -1;
-	while (++i <  len)
-		solve_one(state);
+	opti_sort(state);
 	to_norm(state);
+}
+
+void	merge_cycle(void)
+{
+	return ;
 }
 
 void	merge(t_sol *sol)
