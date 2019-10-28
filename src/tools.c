@@ -29,8 +29,9 @@ t_nbr	*new_nbr(int n)
 
 void	fill_list_str(t_ps_list *list, char *str)
 {
-	int		n;
-	char	sign;
+	int				n;
+	int				buf;
+	char			sign;
 
 	while (*str)
 	{
@@ -45,17 +46,23 @@ void	fill_list_str(t_ps_list *list, char *str)
 			}
 			else
 				sign = 1;
+			if (!ft_isdigit(*str))
+				ft_exit();
 			n = 0;
 			while (ft_isdigit(*str))
 			{
+				buf = n;
 				n = n * 10 + (*str - '0') * sign;
+				if ((sign == -1 && n > buf) ||\
+					(sign == 1 && n < buf))
+					ft_exit();
 				++str;
 			}
 			list_add(list, new_nbr(n));
 		}
 		else if (ft_isspace(*str))
 			++str;
-		else if (!*str)
+		else if (*str)
 			ft_exit();
 	}
 }

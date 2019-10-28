@@ -176,7 +176,20 @@ void	to_norm(t_state *state)
 	shift_a(state, i, len - i);
 }
 
-void	sort_three(t_state *state)
+void	sort_three_a(t_state *state)
+{
+	if (state->a.top->next->n > state->a.top->next->next->n && \
+			state->a.top->next->n > state->a.top->n)
+		do_cmd(state, RRA);
+	else if (state->a.top->n > state->a.top->next->n && \
+			state->a.top->n > state->a.top->next->next->n)
+		do_cmd(state, RA);
+	if (state->a.top->next->next->n > state->a.top->n && \
+			state->a.top->n > state->a.top->next->n)
+		do_cmd(state, SA);
+}
+
+void	sort_three_b(t_state *state)
 {
 	if (state->b.top->next->n < state->b.top->next->next->n && \
 			state->b.top->next->n < state->b.top->n)
@@ -195,7 +208,7 @@ void	sort_three(t_state *state)
 void	opti_sort(t_state *state)
 {
 	if (state->b.len == 3)
-		sort_three(state);
+		sort_three_b(state);
 	else
 		while (state->b.len > 0)
 			solve_one(state);

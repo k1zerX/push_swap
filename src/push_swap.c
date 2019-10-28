@@ -6,7 +6,7 @@
 /*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/13 16:30:18 by kbatz             #+#    #+#             */
-/*   Updated: 2019/10/27 23:24:31 by kbatz            ###   ########.fr       */
+/*   Updated: 2019/10/28 20:23:29 by kbatz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,13 @@ int		main(int ac, char *av[])
 	fill_stack(&state.a, list, &sum, &len);
 	if (!is_sorted_a(&state))
 	{
-		sort(&state);
-		treatment_sol(&state.sol);
+		if (state.a.len == 3)
+			sort_three_a(&state);
+		else
+		{
+			sort(&state);
+			treatment_sol(&state.sol);
+		}
 		print_sol(state.sol);
 	}
 	ft_del(state, list, arr);

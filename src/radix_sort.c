@@ -1,5 +1,6 @@
 #include "ps_list.h"
 #include "push_swap.h"
+#include "tools.h"
 
 void	lists_zero(t_ps_list lists[10])
 {
@@ -95,9 +96,12 @@ void	radix_sort(t_nbr **arr, int len)
 		flag = radix_sort_digit(arr, len, lists, digit);
 		digit *= 10;
 	}
-	while (len > 0)
+	while (len > 1)
 	{
 		--len;
+		if (arr[len]->n == arr[len - 1]->n)
+			ft_exit();
 		arr[len]->pos = len;
 	}
+	arr[0]->pos = 0;
 }

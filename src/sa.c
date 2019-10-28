@@ -23,7 +23,8 @@ int		sa(t_ps_stack *a, t_ps_stack *b)
 	tmp1->next = tmp3;
 	tmp2->prev = NULL;
 	tmp2->next = tmp1;
-	tmp3->prev = tmp1;
+	if (tmp3)
+		tmp3->prev = tmp1;
 	a->top = tmp2;
 	return (1);
 }

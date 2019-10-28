@@ -16,9 +16,14 @@ void	read_sol(t_sol *sol)
 		while (cmd < LEN)
 		{
 			if (ft_strnequ(str, g_cmds[cmd].name, ft_strlen(str)))
+			{
 				ps_sol_add(sol, cmd);
+				break ;
+			}
 			++cmd;
 		}
+		if (cmd == LEN)
+			ft_exit();
 		free(str);
 	}
 }
@@ -51,10 +56,7 @@ int		main(int ac, char *av[])
 	list = (t_ps_list){NULL, NULL, 0};
 	fill_list(&list, ac, av);
 	if (!list.start)
-	{
-		write(1, "OK\n", 3);
 		return (0);
-	}
 	arr = get_arr(list);
 	radix_sort(arr, list.len);
 	fill_stack(&state.a, list, &sum, &len);
