@@ -1,20 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tools.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/28 20:53:29 by kbatz             #+#    #+#             */
+/*   Updated: 2019/10/28 22:03:26 by kbatz            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "tools.h"
 #include "push_swap.h"
+#include "libft.h"
 
 void	ft_exit(void)
 {
 	write(2, "Error\n", 6);
 	exit(1);
-}
-
-char	ft_isspace(char c)
-{
-	return ((c >= 9 && c <= 13) || c == ' ');
-}
-
-char	ft_isdigit(char c)
-{
-	return (c >= '0' && c <= '9');
 }
 
 t_nbr	*new_nbr(int n)
@@ -27,39 +30,41 @@ t_nbr	*new_nbr(int n)
 	return (nbr);
 }
 
+int		cool_atoi(char **str)
+{
+	int		n;
+	int		buf;
+	char	sign;
+
+	if (**str == '+')
+		++(*str);
+	if (**str == '-')
+	{
+		sign = -1;
+		++(*str);
+	}
+	else
+		sign = 1;
+	if (!ft_isdigit(**str))
+		ft_exit();
+	n = 0;
+	while (ft_isdigit(**str))
+	{
+		buf = n;
+		n = n * 10 + (**str - '0') * sign;
+		if ((sign == -1 && n > buf) || (sign == 1 && n < buf))
+			ft_exit();
+		++(*str);
+	}
+	return (n);
+}
+
 void	fill_list_str(t_ps_list *list, char *str)
 {
-	int				n;
-	int				buf;
-	char			sign;
-
 	while (*str)
 	{
 		if (ft_isdigit(*str) || *str == '-' || *str == '+')
-		{
-			if (*str == '+')
-				++str;
-			if (*str == '-')
-			{
-				sign = -1;
-				++str;
-			}
-			else
-				sign = 1;
-			if (!ft_isdigit(*str))
-				ft_exit();
-			n = 0;
-			while (ft_isdigit(*str))
-			{
-				buf = n;
-				n = n * 10 + (*str - '0') * sign;
-				if ((sign == -1 && n > buf) ||\
-					(sign == 1 && n < buf))
-					ft_exit();
-				++str;
-			}
-			list_add(list, new_nbr(n));
-		}
+			list_add(list, new_nbr(cool_atoi(&str)));
 		else if (ft_isspace(*str))
 			++str;
 		else if (*str)
@@ -74,159 +79,4 @@ void	fill_list(t_ps_list *list, int ac, char *av[])
 		fill_list_str(list, *++av);
 		--ac;
 	}
-}
-
-t_nbr	**get_arr(t_ps_list list)
-{
-	t_nbr	**arr;
-	int		i;
-
-	if (!(arr = malloc(list.len * sizeof(t_nbr *))))
-		ft_exit();
-	i = 0;
-	while (i < list.len)
-	{
-		arr[i] = list.start->nbr;
-		list.start = list.start->next;
-		++i;
-	}
-	return (arr);
-}
-
-void	fill_stack(t_ps_stack *stack, t_ps_list list, int *sum, int *len)
-{
-	t_ps_lelem	*tmp;
-	t_ps_selem	*buf;
-	t_ps_selem	*prev;
-
-	tmp = list.start;
-	if (!(buf = malloc(sizeof(t_ps_selem))))
-		ft_exit();
-	buf->prev = NULL;
-	buf->n = tmp->nbr->pos;
-	*sum += buf->n;
-	++*len;
-	stack->top = buf;
-	tmp = tmp->next;
-	while (tmp)
-	{
-		prev = buf;
-		if (!(buf = malloc(sizeof(t_ps_selem))))
-			ft_exit();
-		buf->prev = prev;
-		buf->n = tmp->nbr->pos;
-		*sum += buf->n;
-		++*len;
-		prev->next = buf;
-		tmp = tmp->next;
-	}
-	buf->next = NULL;
-	stack->bot = buf;
-	stack->len = list.len;
-}
-
-char	is_sorted_a(t_state *state)
-{
-	t_ps_selem	*tmp;
-	t_ps_selem	*next;
-
-	if ((tmp = state->a.top))
-	{
-		next = tmp->next;
-		while (next)
-		{
-			if (tmp->n > next->n)
-				return (0);
-			tmp = next;
-			next = tmp->next;
-		}
-	}
-	return (1);
-}
-
-char	is_sorted_b(t_state *state)
-{
-	t_ps_selem	*tmp;
-	t_ps_selem	*next;
-
-	if ((tmp = state->b.top))
-	{
-		next = tmp->next;
-		while (next)
-		{
-			if (tmp->n < next->n)
-				return (0);
-			tmp = next;
-			next = tmp->next;
-		}
-	}
-	return (1);
-}
-
-void	ps_sol_add(t_sol *sol, t_cmds cmd)
-{
-	t_sol_elem	*tmp;
-
-	if (!(tmp = malloc(sizeof(t_sol_elem))))
-		ft_exit();
-	tmp->cmd = cmd;
-	tmp->next = NULL;
-	if (sol->bot)
-		sol->bot->next = tmp;
-	else
-		sol->top = tmp;
-	sol->bot = tmp;
-	++sol->len;
-}
-
-void	ft_del_list(t_ps_list list)
-{
-	t_ps_lelem	*tmp;
-	t_ps_lelem	*next;
-
-	tmp = list.start;
-	while (tmp)
-	{
-		next = tmp->next;
-		free(tmp->nbr);
-		free(tmp);
-		tmp = next;
-	}
-}
-
-void	ft_del_stack(t_ps_stack stack)
-{
-	t_ps_selem	*tmp;
-	t_ps_selem	*next;
-
-	tmp = stack.top;
-	while (tmp)
-	{
-		next = tmp->next;
-		free(tmp);
-		tmp = next;
-	}
-}
-
-void	ft_del_sol(t_sol sol)
-{
-	t_sol_elem	*tmp;
-	t_sol_elem	*next;
-
-	tmp = sol.top;
-	while (tmp)
-	{
-		next = tmp->next;
-		free(tmp);
-		tmp = next;
-	}
-}
-
-void	ft_del(t_state state, t_ps_list list, t_nbr **arr)
-{
-	free(arr);
-	ft_del_list(list);
-	ft_del_stack(state.a);
-	ft_del_stack(state.b);
-	ft_del_sol(state.sol);
 }

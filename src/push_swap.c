@@ -6,7 +6,7 @@
 /*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/13 16:30:18 by kbatz             #+#    #+#             */
-/*   Updated: 2019/10/28 20:23:29 by kbatz            ###   ########.fr       */
+/*   Updated: 2019/10/28 21:50:29 by kbatz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,21 @@ void	print_sol(t_sol sol)
 	}
 }
 
+void	gg(t_state *state)
+{
+	if (!is_sorted_a(state))
+	{
+		if (state->a.len == 3)
+			sort_three_a(state);
+		else
+		{
+			sort(state);
+			treatment_sol(&state->sol);
+		}
+		print_sol(state->sol);
+	}
+}
+
 int		main(int ac, char *av[])
 {
 	t_state		state;
@@ -48,17 +63,7 @@ int		main(int ac, char *av[])
 	arr = get_arr(list);
 	radix_sort(arr, list.len);
 	fill_stack(&state.a, list, &sum, &len);
-	if (!is_sorted_a(&state))
-	{
-		if (state.a.len == 3)
-			sort_three_a(&state);
-		else
-		{
-			sort(&state);
-			treatment_sol(&state.sol);
-		}
-		print_sol(state.sol);
-	}
+	gg(&state);
 	ft_del(state, list, arr);
 	return (0);
 }

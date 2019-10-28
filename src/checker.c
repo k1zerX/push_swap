@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checker.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/28 20:45:06 by kbatz             #+#    #+#             */
+/*   Updated: 2019/10/28 21:07:05 by kbatz            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cmds.h"
 #include "gvars.h"
 #include "radix_sort.h"
@@ -18,7 +30,6 @@ void	read_sol(t_sol *sol)
 			if (ft_strnequ(str, g_cmds[cmd].name, ft_strlen(str)))
 			{
 				ps_sol_add(sol, cmd);
-				free(str);
 				break ;
 			}
 			++cmd;
