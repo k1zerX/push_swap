@@ -6,17 +6,17 @@
 /*   By: kbatz <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/21 07:30:21 by kbatz             #+#    #+#             */
-/*   Updated: 2019/10/13 20:30:02 by kbatz            ###   ########.fr       */
+/*   Updated: 2019/10/28 20:33:34 by kbatz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CMDS_H
 # define CMDS_H
 
-#include "ps_stack.h"
+# include "ps_stack.h"
 
-typedef struct	s_cmd	t_cmd;
-typedef enum	e_cmds	t_cmds;
+typedef struct s_cmd	t_cmd;
+typedef enum e_cmds		t_cmds;
 
 struct					s_cmd
 {

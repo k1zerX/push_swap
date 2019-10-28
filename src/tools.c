@@ -208,10 +208,25 @@ void	ft_del_stack(t_ps_stack stack)
 	}
 }
 
+void	ft_del_sol(t_sol sol)
+{
+	t_sol_elem	*tmp;
+	t_sol_elem	*next;
+
+	tmp = sol.top;
+	while (tmp)
+	{
+		next = tmp->next;
+		free(tmp);
+		tmp = next;
+	}
+}
+
 void	ft_del(t_state state, t_ps_list list, t_nbr **arr)
 {
 	free(arr);
 	ft_del_list(list);
 	ft_del_stack(state.a);
 	ft_del_stack(state.b);
+	ft_del_sol(state.sol);
 }

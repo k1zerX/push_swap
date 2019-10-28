@@ -18,6 +18,7 @@ void	read_sol(t_sol *sol)
 			if (ft_strnequ(str, g_cmds[cmd].name, ft_strlen(str)))
 			{
 				ps_sol_add(sol, cmd);
+				free(str);
 				break ;
 			}
 			++cmd;
